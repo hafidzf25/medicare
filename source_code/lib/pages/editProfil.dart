@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/pages/profilPasien.dart';
 
 class EditProfil extends StatefulWidget {
   const EditProfil({Key? key}) : super(key: key);
@@ -186,6 +187,12 @@ class _EditProfilState extends State<EditProfil> {
                                   _isEditing = false;
                                 });
                               }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfilPasien(),
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
