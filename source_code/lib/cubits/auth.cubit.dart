@@ -141,6 +141,24 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
+  Future<void> updateProfil(int id_user, Map<String, dynamic> profilData) async {
+    final response = await http.put(
+      Uri.parse('http://127.0.0.1:8000/profil/$id_user'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${state.accessToken}',
+      },
+      body: jsonEncode(profilData),
+    );
+
+    if (response.statusCode == 200) {
+      dataProfil = jsonDecode(response.body);
+      emit(AuthModel(userID: state.userID, accessToken: state.accessToken, error: ""));
+    } else {
+      throw Exception('Failed to update profil');
+    }
+  }
+
   Future<void> getDokter(int id_dokter) async {
     final response = await http.get(
       Uri.parse('http://127.0.0.1:8000/dokter?id_dokter=${id_dokter}'),
