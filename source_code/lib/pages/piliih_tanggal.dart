@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
@@ -72,7 +73,6 @@ class _PilihTanggalState extends State<PilihTanggal> {
     for (var i = 0; i < myAuth.hariKerja.length; i++) {
       disabledDays.add(myAuth.hariKerja[i]['id_hari']);
     }
-    double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
@@ -340,9 +340,12 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
         .where((item) => item["id_hari"] == tanggalDipilih)
         .toList();
 
-    // print(hasil);
+    print(hasil);
 
     String tanggal = widget.selectedDate.toIso8601String().split('T')[0];
+
+    String locale = '';
+    initializeDateFormatting('id_ID', locale);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -368,7 +371,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
               Container(
                 padding: EdgeInsets.all(20),
                 child: Text(
-                  DateFormat('EEEE, d MMMM y').format(
+                  DateFormat('EEEE, d MMMM y', 'id_ID').format(
                       widget.selectedDate), // Tampilkan tanggal yang dipilih
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(

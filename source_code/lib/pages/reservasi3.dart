@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/pilihdokter.dart';
-import 'package:source_code/pages/reservasi.dart';
 
 void main() {
   runApp(MaterialApp(

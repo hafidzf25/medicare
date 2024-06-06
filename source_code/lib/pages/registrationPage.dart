@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'dart:typed_data';
 import 'dart:html' as html;
 
@@ -48,6 +50,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<AuthCubit>().state.userID);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(

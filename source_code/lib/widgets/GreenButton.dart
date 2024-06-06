@@ -47,9 +47,6 @@ class _GreenButtonState extends State<GreenButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: _onTapCancel,
       onTap: widget.onTap,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 150),
