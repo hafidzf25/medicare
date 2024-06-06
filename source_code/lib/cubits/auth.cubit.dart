@@ -69,6 +69,38 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
+  Future<void> tambahProfil(int userID, String nama, String jenisKelamin, String notelp, String tanggalLahir, String foto) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/profil/$userID'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "nama": nama,
+        "jenis_kelamin": jenisKelamin,
+        "notelp": notelp,
+        "tanggal_lahir": tanggalLahir,
+        "foto": foto
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Profil berhasil ditambahkan: ${response.body}');
+      // Tambahkan logika tambahan di sini jika diperlukan
+    } else {
+      print('Gagal menambahkan profil: ${response.statusCode} ${response.body}');
+      // Emit error state jika diperlukan
+      emit(AuthModel(userID: state.userID, accessToken: state.accessToken, error: "Gagal menambahkan profil"));
+    }
+  }
+
+
+
+
+
+
+  
+
   Future<void> getspesialis() async {
     final response = await http.get(
       Uri.parse('http://127.0.0.1:8000/spesialis/?skip=0&limit=10'),
