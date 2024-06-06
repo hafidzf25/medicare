@@ -1,0 +1,181 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:source_code/main.dart';
+import 'package:source_code/pages/reservasi_tab.dart';
+import '../widgets/GreenButton.dart';
+import 'package:source_code/pages/home_page.dart';
+import 'rincian_reservasi.dart';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Terkonfirmasi(),
+  ));
+}
+
+class Terkonfirmasi extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      backgroundColor: Color(0xFFC1F4FF),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFC1F4FF), Color(0xFFFFFFFF)],
+          ),
+        ),
+        child: ListView(
+          padding: EdgeInsets.zero, // Menghapus padding vertikal dari ListView
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 50.0), // Ubah jarak di sini sesuai kebutuhan
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              color: Colors.black,
+                              size: 60,
+                            ),
+                            Icon(
+                              Icons.done,
+                              color: Colors.black,
+                              size: 24,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: screenWidth * 0.9,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 1,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Rabu, 14 Februari 2024, 12:30 - 12:50",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: Colors.black,
+                              size: 16,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              "Beta Medicare Bandung",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "dr. Abdul Hafidz",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Biaya: Rp. 20000",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          "Mohon datang 15 menit lebih awal untuk check-in",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 100), // Menambahkan jarak antara kotak dan teks terakhir
+                Text(
+                  "Terimakasih telah memilih Rumah Sakit Beta Medicare",
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 30),
+                // Konfirmasi button
+                GreenButton(
+                  onTap: () {
+                    // Action to perform when button is pressed
+                    Navigator.push(
+                      context,
+                        MaterialPageRoute(builder: (context) => ReservasiTab()),
+                      );
+                  },
+                  text: 'LIHAT JANJI TEMU',
+                  width: screenWidth * 0.9,
+                  height: 45,
+                ),
+                SizedBox(height: 20), // Menambahkan jarak antara button sebelumnya dan button "Kembali ke Home"
+                GreenButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                        MaterialPageRoute(builder: (context) => MyHomePage()),
+                      );
+                  },
+                  text: 'KEMBALI KE HOME',
+                  width: screenWidth * 0.9,
+                  height: 45,
+                  backgroundColor: Colors.green,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
