@@ -143,7 +143,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
                     locale: "en_US",
                     rowHeight: 43,
                     calendarStyle: const CalendarStyle(
-                      defaultTextStyle: TextStyle(color: Colors.black),
+                      defaultTextStyle: TextStyle(color: Colors.green),
                       weekendTextStyle: TextStyle(color: Colors.red),
                       outsideDaysVisible: false,
                       selectedDecoration: BoxDecoration(
@@ -189,7 +189,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
                             '${day.day}',
                             style: const TextStyle(
                                 color: Colors
-                                    .grey), // Gaya untuk tanggal yang dinonaktifkan
+                                    .red), // Gaya untuk tanggal yang dinonaktifkan
                           ),
                         );
                       },
@@ -207,7 +207,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
                           width: 20,
                           height: 20,
                           decoration: const BoxDecoration(
-                            color: Colors.black,
+                            color: Colors.green,
                             shape: BoxShape.rectangle,
                           ),
                         ),
@@ -230,7 +230,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
                           "Tersedia",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black,
+                            color: Colors.green,
                           ),
                         ),
                         Text(
