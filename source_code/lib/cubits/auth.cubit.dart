@@ -46,6 +46,7 @@ class AuthCubit extends Cubit<AuthModel> {
       gethari();
       getjam();
       await getProfil(state.userID);
+      getProfilLain(state.userID);
       await getReservasiByDaftarProfil(dataProfil['id_daftar_profil']);
       // getJamKerjaDokterById(7);
     } else {
@@ -417,7 +418,6 @@ class AuthCubit extends Cubit<AuthModel> {
 
     if (response.statusCode == 200) {
       dataProfilLain = jsonDecode(response.body);
-      await getDaftarProfilSiProfil(dataProfilLain['id']);
     } else {
       throw Exception('Failed to load profil');
     }
