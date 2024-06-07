@@ -395,6 +395,7 @@ class AuthCubit extends Cubit<AuthModel> {
           'id_jam_kerja_dokter': idJamKerjaDokter,
           'id_daftar_profil': idDaftarProfil,
           'biaya': biaya,
+          'status': 0,
         },
       ),
     );
