@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/pages/landingPage.dart';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:html' as html;
-
-import 'package:source_code/pages/landingPage.dart';
-
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: RegistrationPage(),
-  ));
-}
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -48,9 +40,98 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Tampilkan dialog konfirmasi
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Apakah Anda yakin bahwa informasi yang Anda masukkan dibawah sudah akurat?',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  'Nama: $_name\n'
+                  'Tanggal Lahir: ${_dateOfBirth != null ? "${_dateOfBirth!.year}-${_dateOfBirth!.month.toString().padLeft(2, '0')}-${_dateOfBirth!.day.toString().padLeft(2, '0')}" : ''}\n'
+                  'Jenis Kelamin: $_gender\n'
+                  'Nomor Ponsel: $_phoneNumber',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  'Pastikan bahwa data yang Anda berikan sudah benar, dan nama serta tanggal lahir Anda cocok dengan kartu identifikasi nasional Anda karena kami akan memeriksa dan menyimpan data berikut.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Batal'),
+              ),
+              ElevatedButton(
+                onPressed: _isAgreed
+                    ? () {
+                        // Tambahkan data setelah mengklik "LANJUT"
+                        BlocProvider.of<AuthCubit>(context).tambahProfil(
+                          BlocProvider.of<AuthCubit>(context)
+                              .state
+                              .userID, // ID pengguna
+                          _name, // Nama
+                          _gender, // Jenis Kelamin
+                          _phoneNumber, // Nomor Telepon
+                          _dateOfBirth != null
+                              ? "${_dateOfBirth!.year}-${_dateOfBirth!.month.toString().padLeft(2, '0')}-${_dateOfBirth!.day.toString().padLeft(2, '0')}" // Tanggal Lahir
+                              : "", // Tanggal Lahir (jika tidak ada)
+                          _galleryImageBytes != null
+                              ? base64Encode(
+                                  _galleryImageBytes!) // Foto (jika ada)
+                              : "", // Foto (jika tidak ada)
+                        );
+                        // Pindahkan ke halaman landing setelah menambahkan data
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LandingPage()),
+                        );
+                      }
+                    : null,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                    (Set<MaterialState> states) {
+                      return _isAgreed ? Colors.green : Colors.grey;
+                    },
+                  ),
+                ),
+                child: Text(
+                  'Lanjut',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(context.read<AuthCubit>().state.userID);
+    print("Building RegistrationPage");
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -79,7 +160,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       color: Colors.black,
                     ),
                   ),
-                 
                   SizedBox(height: 32.0),
                   Text(
                     'Daftar',
@@ -94,7 +174,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     'Sepertinya Anda pengguna baru. Mohon lengkapi data Anda',
                     style: GoogleFonts.poppins(fontSize: 16.0),
                   ),
-                   SizedBox(height: 32.0),
+                  SizedBox(height: 32.0),
                   Center(
                     child: GestureDetector(
                       onTap: getImageFromGallery,
@@ -155,7 +235,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     },
                     controller: TextEditingController(
                       text: _dateOfBirth != null
-                          ? "${_dateOfBirth!.day}-${_dateOfBirth!.month}-${_dateOfBirth!.year}"
+                          ? "${_dateOfBirth!.year}-${_dateOfBirth!.month.toString().padLeft(2, '0')}-${_dateOfBirth!.day.toString().padLeft(2, '0')}"
                           : '',
                     ),
                   ),
@@ -209,9 +289,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             backgroundColor:
                                 MaterialStateProperty.resolveWith<Color?>(
                               (Set<MaterialState> states) {
-                                return _gender == 'WANITA'
-                                    ? Colors.blue
-                                    : null;
+                                return _gender == 'WANITA' ? Colors.blue : null;
                               },
                             ),
                           ),
@@ -269,71 +347,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isAgreed
-                          ? () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                // Proses data yang telah diisi
-                                print('Nama: $_name');
-                                print('Tanggal Lahir: $_dateOfBirth');
-                                print('Jenis Kelamin: $_gender');
-                                print('Nomor Ponsel: $_phoneNumber');
-
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'Apakah Anda yakin bahwa informasi yang Anda masukkan dibawah sudah akurat?',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          SizedBox(height: 8.0),
-                                          Text(
-                                            'Nama: $_name\n'
-                                            'Tanggal Lahir: ${_dateOfBirth != null ? "${_dateOfBirth!.day}-${_dateOfBirth!.month}-${_dateOfBirth!.year}" : ''}\n'
-                                            'Jenis Kelamin: $_gender\n'
-                                            'Nomor Ponsel: $_phoneNumber',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          SizedBox(height: 8.0),
-                                          Text(
-                                            'Pastikan bahwa data yang Anda berikan sudah benar, dan nama serta tanggal lahir Anda cocok dengan kartu identifikasi nasional Anda karena kami akan memeriksa dan menyimpan data berikut.',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Batal'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      LandingPage()),
-                                            );
-                                          },
-                                          child: Text('Lanjut'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                          : null,
+                      onPressed: _isAgreed ? _register : null,
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.resolveWith<Color?>(

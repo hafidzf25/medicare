@@ -1,10 +1,9 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/models/auth.model.dart';
-import 'package:source_code/pages/verifikasi_wa.dart';
+import 'package:source_code/pages/registrationPage.dart';
 
 void main() {
   runApp(
@@ -27,26 +26,12 @@ class _RegisUserState extends State<RegisUser> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
-  String generateRandomOtp() {
-    final random = Random();
-    return List.generate(6, (_) => random.nextInt(10)).join();
-  }
 
-  void sendOtp() async {
-    String generatedOtp = generateRandomOtp();
-    print("Generated OTP: $generatedOtp"); // For debugging
-
-    // Simulate a delay of 3 seconds
-    await Future.delayed(Duration(seconds: 3));
-
+  void navigateToRegistrationPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => VerifikasiWA(
-          generatedOTP: generatedOtp,
-          email: _emailController.text,
-        ),
+        builder: (context) => RegistrationPage(),
       ),
     );
   }
@@ -56,7 +41,12 @@ class _RegisUserState extends State<RegisUser> {
     return Scaffold(
       body: BlocListener<AuthCubit, AuthModel>(
         listener: (context, state) {
-          if (state.error.isNotEmpty) {
+          print("Current userID: ${state.userID}");
+          if (state.userID != 0) {
+            // User registered successfully, navigate to the next screen
+            navigateToRegistrationPage();
+          } else if (state.error.isNotEmpty) {
+            // Show error message
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error)),
             );
@@ -148,7 +138,7 @@ class _RegisUserState extends State<RegisUser> {
                               // Setelah register berhasil, cek state untuk memastikan tidak ada error
                               final authState = BlocProvider.of<AuthCubit>(context).state;
                               if (authState.error.isEmpty) {
-                                sendOtp();
+                                navigateToRegistrationPage();
                               }
                             });
                           }
