@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/periksajanjitemu.dart';
 
 void main() {
@@ -10,8 +13,11 @@ void main() {
 }
 
 class PilihPasien extends StatefulWidget {
-
-  PilihPasien({this.tanggal = '', this.idxJadwal = 0, this.biaya = "Rp. 30.000"}) :super();
+  PilihPasien(
+      {super.key,
+      this.tanggal = '',
+      this.idxJadwal = 0,
+      this.biaya = "Rp. 30.000"});
   String tanggal;
   String biaya;
   int idxJadwal;
@@ -26,10 +32,11 @@ class _PilihPasienState extends State<PilihPasien> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTime = DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
+    DateFormat dateFormat = DateFormat('d MMMM yyyy', 'id_ID');
+    var tanggal = dateFormat.format(dateTime);
+
     double screenWidth = MediaQuery.of(context).size.width;
-    // print(widget.tanggal);
-    // print(widget.biaya);
-    // print(widget.idxJadwal);
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       appBar: AppBar(
@@ -102,7 +109,8 @@ class _PilihPasienState extends State<PilihPasien> {
                             child: Container(
                               width: screenWidth * 0.9,
                               decoration: BoxDecoration(
-                                color: _isSelected1 ? Colors.blue : Colors.white,
+                                color:
+                                    _isSelected1 ? Colors.blue : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
@@ -118,11 +126,13 @@ class _PilihPasienState extends State<PilihPasien> {
                                 child: Row(
                                   children: [
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Rifky Affandy - Saya Sendiri",
+                                          "${context.read<AuthCubit>().dataProfil['nama']} - Saya Sendiri",
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.bold,
                                             color: _isSelected1
@@ -133,7 +143,7 @@ class _PilihPasienState extends State<PilihPasien> {
                                         Padding(
                                           padding: EdgeInsets.only(top: 10),
                                           child: Text(
-                                            "30 Februari 1996",
+                                            "${tanggal}",
                                             style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               color: _isSelected1
@@ -145,7 +155,7 @@ class _PilihPasienState extends State<PilihPasien> {
                                         Padding(
                                           padding: EdgeInsets.only(top: 10),
                                           child: Text(
-                                            "081234567890",
+                                            "${context.read<AuthCubit>().dataProfil['notelp']}",
                                             style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               color: _isSelected1
@@ -183,7 +193,8 @@ class _PilihPasienState extends State<PilihPasien> {
                             child: Container(
                               width: screenWidth * 0.9,
                               decoration: BoxDecoration(
-                                color: _isSelected2 ? Colors.blue : Colors.white,
+                                color:
+                                    _isSelected2 ? Colors.blue : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
@@ -199,8 +210,10 @@ class _PilihPasienState extends State<PilihPasien> {
                                 child: Row(
                                   children: [
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Rifky Affandy - Orang Lain",
@@ -255,7 +268,13 @@ class _PilihPasienState extends State<PilihPasien> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PeriksaJanjiTemu()),
+                    MaterialPageRoute(
+                      builder: (context) => PeriksaJanjiTemu(
+                        biaya: widget.biaya,
+                        tanggal: widget.tanggal,
+                        idxJadwal: widget.idxJadwal,
+                      ),
+                    ),
                   );
                 },
                 text: "Lanjut",
@@ -302,12 +321,8 @@ class _GreenButtonState extends State<GreenButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.isEnabled ? widget.onTap : null,
-      onTapDown: widget.isEnabled
-          ? (_) => setState(() => _scale = 0.95)
-          : null,
-      onTapUp: widget.isEnabled
-          ? (_) => setState(() => _scale = 1.0)
-          : null,
+      onTapDown: widget.isEnabled ? (_) => setState(() => _scale = 0.95) : null,
+      onTapUp: widget.isEnabled ? (_) => setState(() => _scale = 1.0) : null,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 150),
         curve: Curves.easeInOut,
@@ -317,9 +332,7 @@ class _GreenButtonState extends State<GreenButton> {
             width: widget.width,
             height: widget.height,
             decoration: BoxDecoration(
-              color: widget.isEnabled
-                  ? widget.backgroundColor
-                  : Colors.grey,
+              color: widget.isEnabled ? widget.backgroundColor : Colors.grey,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(

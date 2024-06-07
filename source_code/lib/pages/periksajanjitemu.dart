@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import '../widgets/GreenButton.dart';
 import 'package:source_code/pages/tandaterkonfirmasi.dart';
 
@@ -11,6 +15,15 @@ void main() {
 }
 
 class PeriksaJanjiTemu extends StatefulWidget {
+  PeriksaJanjiTemu(
+      {super.key,
+      this.tanggal = "0000-00-00",
+      this.biaya = "Rp.20.000",
+      this.idxJadwal = 0});
+  String tanggal;
+  int idxJadwal;
+  String biaya;
+
   @override
   _PeriksaJanjiTemuState createState() => _PeriksaJanjiTemuState();
 }
@@ -20,6 +33,26 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
 
   @override
   Widget build(BuildContext context) {
+    AuthCubit myAuth = context.read<AuthCubit>();
+    DateTime dateTime = DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
+    DateFormat dateFormat = DateFormat('d MMMM yyyy', 'id_ID');
+    var tanggal = dateFormat.format(dateTime);
+
+    String locale = '';
+    initializeDateFormatting('id_ID', locale);
+
+    DateTime dateTime2 = DateTime.parse(widget.tanggal);
+    DateFormat dateFormat2 = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
+    int idxJam = myAuth.hariKerja.indexWhere((element) => element['id'] == widget.idxJadwal);
+
+    var tanggalreservasi =  dateFormat2.format(dateTime2);
+    var tempjam = myAuth.hariKerja[idxJam];
+    idxJam = myAuth.dataJam.indexWhere((element) => element['id'] == tempjam['id_jam']);
+    
+    var jam = myAuth.dataJam[idxJam];
+    var jamawal = jam['jam_awal'].substring(0,5);
+    var jamakhir = jam['jam_akhir'].substring(0,5);
+
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
@@ -116,7 +149,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(top: 5, bottom: 10),
                                 child: Text(
-                                  "Rifky Affandy",
+                                  "${myAuth.dataProfil['nama']}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -132,7 +165,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "30 Februari 1996",
+                                  "${tanggal}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -148,23 +181,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "081234567890",
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "EMAIL",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Text(
-                                  "rifkytech@gmail.com",
+                                  "${myAuth.dataProfil['notelp']}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -233,7 +250,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "Rabu, 14 Februari 2024 12:30-12:50",
+                                  "${tanggalreservasi} ${jamawal}-${jamakhir}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -249,7 +266,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "dr. Abdul Hafidz",
+                                  "${myAuth.Dokter['nama']}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -265,7 +282,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "Dermatologi (Kulit) - Spesialis Kulit",
+                                  "${myAuth.Spesialis['nama']}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -311,7 +328,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                             child: Padding(
                               padding: EdgeInsets.all(15),
                               child: Text(
-                                "Rp. 20000",
+                                "${widget.biaya}",
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
@@ -326,10 +343,14 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                   SizedBox(height: 50),
                   // Konfirmasi button
                   GreenButton(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      await myAuth.postReservasi(
+                          widget.tanggal, widget.idxJadwal, 1, widget.biaya);
+                      await Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Terkonfirmasi()),
+                        MaterialPageRoute(
+                          builder: (context) => Terkonfirmasi(),
+                        ),
                       );
                     },
                     text: 'KONFIRMASI',

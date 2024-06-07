@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/main.dart';
 import 'package:source_code/pages/reservasi_tab.dart';
 import '../widgets/GreenButton.dart';
-import 'package:source_code/pages/home_page.dart';
-import 'rincian_reservasi.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  var locale;
+  
+
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Terkonfirmasi(),
@@ -14,9 +21,27 @@ void main() {
 }
 
 class Terkonfirmasi extends StatelessWidget {
+  Terkonfirmasi();
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    AuthCubit myAuth = context.read<AuthCubit>();
+    String locale = '';
+    initializeDateFormatting('id_ID', locale);
+
+    DateTime dateTime = DateTime.parse(myAuth.Reservasi['tanggal']);
+    DateFormat dateFormat = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
+    int idxJam = myAuth.hariKerja.indexWhere((element) => element['id'] == myAuth.Reservasi['id_jam_kerja_dokter']);
+
+    var tanggal =  dateFormat.format(dateTime);
+    var tempjam = myAuth.hariKerja[idxJam];
+    idxJam = myAuth.dataJam.indexWhere((element) => element['id'] == tempjam['id_jam']);
+    
+    var jam = myAuth.dataJam[idxJam];
+    var jamawal = jam['jam_awal'].substring(0,5);
+    var jamakhir = jam['jam_akhir'].substring(0,5);
+
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       body: Container(
@@ -34,7 +59,8 @@ class Terkonfirmasi extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 50.0), // Ubah jarak di sini sesuai kebutuhan
+                  padding: const EdgeInsets.only(
+                      top: 50.0), // Ubah jarak di sini sesuai kebutuhan
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -85,7 +111,7 @@ class Terkonfirmasi extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "Rabu, 14 Februari 2024, 12:30 - 12:50",
+                          "${tanggal}, ${jamawal} - ${jamakhir}",
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                           ),
@@ -111,7 +137,7 @@ class Terkonfirmasi extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "dr. Abdul Hafidz",
+                          "${myAuth.Dokter['nama']}",
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                           ),
@@ -119,7 +145,7 @@ class Terkonfirmasi extends StatelessWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          "Biaya: Rp. 20000",
+                          "Biaya: Rp. ${myAuth.Reservasi['biaya']}",
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                           ),
@@ -139,7 +165,9 @@ class Terkonfirmasi extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 100), // Menambahkan jarak antara kotak dan teks terakhir
+                SizedBox(
+                    height:
+                        100), // Menambahkan jarak antara kotak dan teks terakhir
                 Text(
                   "Terimakasih telah memilih Rumah Sakit Beta Medicare",
                   textAlign: TextAlign.center,
@@ -151,20 +179,22 @@ class Terkonfirmasi extends StatelessWidget {
                     // Action to perform when button is pressed
                     Navigator.push(
                       context,
-                        MaterialPageRoute(builder: (context) => ReservasiTab()),
-                      );
+                      MaterialPageRoute(builder: (context) => ReservasiTab()),
+                    );
                   },
                   text: 'LIHAT JANJI TEMU',
                   width: screenWidth * 0.9,
                   height: 45,
                 ),
-                SizedBox(height: 20), // Menambahkan jarak antara button sebelumnya dan button "Kembali ke Home"
+                SizedBox(
+                    height:
+                        20), // Menambahkan jarak antara button sebelumnya dan button "Kembali ke Home"
                 GreenButton(
                   onTap: () {
                     Navigator.push(
                       context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()),
-                      );
+                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                    );
                   },
                   text: 'KEMBALI KE HOME',
                   width: screenWidth * 0.9,
