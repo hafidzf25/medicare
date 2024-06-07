@@ -141,7 +141,7 @@ class Reservasi3 extends StatelessWidget {
                                     padding: EdgeInsets.only(right: 10),
                                     child: Image(
                                       image: AssetImage(
-                                          "assets/images/${Doktor['foto']}"),
+                                          "assets/images/dokter/${Doktor['foto']}"),
                                       width: 70,
                                       height: 70,
                                     ),
