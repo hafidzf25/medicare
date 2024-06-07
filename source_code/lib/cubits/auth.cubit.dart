@@ -94,13 +94,13 @@ class AuthCubit extends Cubit<AuthModel> {
 
     if (response.statusCode == 200) {
       print('Profil berhasil ditambahkan: ${response.body}');
-      // Tambahkan logika tambahan di sini jika diperlukan
+      emit(AuthModel(userID: state.userID, accessToken: state.accessToken, error: ""));
     } else {
       print('Gagal menambahkan profil: ${response.statusCode} ${response.body}');
-      // Emit error state jika diperlukan
       emit(AuthModel(userID: state.userID, accessToken: state.accessToken, error: "Gagal menambahkan profil"));
     }
   }
+
 
 
 
