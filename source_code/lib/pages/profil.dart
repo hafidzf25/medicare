@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/landingPage.dart';
 
 import '../widgets/CustomButton.dart';
@@ -55,26 +57,27 @@ class Profil extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     CircleAvatar(
                       radius: 55,
                       backgroundColor: Color(0xFFD9D9D9),
-                      child: Icon(
+                      backgroundImage: AssetImage("assets/images/${context.read<AuthCubit>().dataProfil['foto']}"),
+                      child: const Icon(
                         Icons.person, // Icon yang ingin ditampilkan
-                        size: 65, // Ukuran ikon
+                        size: 1, // Ukuran ikon
                         color: Colors.black, // Warna ikon
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                         width: 20), // Atur jarak antara "CircleAvatar" dan "Hi"
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Hi!', // Teks "Hi"
-                          style: TextStyle(
+                          'Hi ${context.read<AuthCubit>().dataProfil['nama']}!', // Teks "Hi"
+                          style: const TextStyle(
                             fontSize: 20, // Ukuran teks
                             fontWeight: FontWeight.bold, // Ketebalan teks
                             color: Colors.white, // Warna teks

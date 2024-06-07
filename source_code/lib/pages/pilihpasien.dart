@@ -32,7 +32,8 @@ class _PilihPasienState extends State<PilihPasien> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
+    DateTime dateTime =
+        DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
     DateFormat dateFormat = DateFormat('d MMMM yyyy', 'id_ID');
     var tanggal = dateFormat.format(dateTime);
 
@@ -96,15 +97,17 @@ class _PilihPasienState extends State<PilihPasien> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(top: 10),
                           child: GestureDetector(
                             onTap: () {
-                              setState(() {
-                                _isSelected1 = !_isSelected1;
-                                if (_isSelected1) {
-                                  _isSelected2 = false;
-                                }
-                              });
+                              setState(
+                                () {
+                                  _isSelected1 = !_isSelected1;
+                                  if (_isSelected1) {
+                                    _isSelected2 = false;
+                                  }
+                                },
+                              );
                             },
                             child: Container(
                               width: screenWidth * 0.9,
