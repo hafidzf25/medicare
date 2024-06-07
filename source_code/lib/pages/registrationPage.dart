@@ -77,7 +77,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LandingPage(),
+                      ));
                 },
                 child: Text('Batal'),
               ),
@@ -100,11 +104,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   _galleryImageBytes!) // Foto (jika ada)
                               : "", // Foto (jika tidak ada)
                         );
-                        // Pindahkan ke halaman landing setelah menambahkan data
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LandingPage()),
+                            builder: (context) => LandingPage(),
+                          ),
                         );
                       }
                     : null,
