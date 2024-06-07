@@ -13,7 +13,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var locale;
   
-
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Terkonfirmasi(),

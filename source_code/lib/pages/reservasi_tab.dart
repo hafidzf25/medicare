@@ -1,58 +1,48 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/histori_reservasi.dart';
-import 'package:source_code/pages/periksajanjitemu.dart';
-import 'package:source_code/pages/rekam_medis.dart';
 import 'package:source_code/pages/rincian_reservasi.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ReservasiTab(),
-  ));
-}
-
 class ReservasiTab extends StatelessWidget {
-  const ReservasiTab({Key? key}) : super(key: key);
+  const ReservasiTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    initializeDateFormatting('id_ID', null);
+    AuthCubit myAuth = context.read<AuthCubit>();
     return Scaffold(
-      backgroundColor: Color(0xFFC1F4FF),
+      backgroundColor: const Color(0xFFC1F4FF),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 200,
-        backgroundColor: Color(0xFF0D0A92),
+        backgroundColor: const Color(0xFF0D0A92),
         title: Padding(
-          padding: EdgeInsets.only(top: 50),
+          padding: const EdgeInsets.only(top: 50),
           child: Row(
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  "Reservasi Saya",
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 20),
                 ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Text(
-                "Reservasi Saya",
-                style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                    fontSize: 20),
               ),
             ],
           ),
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -62,7 +52,7 @@ class ReservasiTab extends StatelessWidget {
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Row(
                 children: [
                   Container(
@@ -76,7 +66,7 @@ class ReservasiTab extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.5), // Warna bayangan
                           spreadRadius: 3, // Radius penyebaran bayangan
                           blurRadius: 3, // Radius blur bayangan
-                          offset: Offset(2, 2), // Posisi bayangan (x, y)
+                          offset: const Offset(2, 2), // Posisi bayangan (x, y)
                         ),
                       ],
                     ),
@@ -85,13 +75,6 @@ class ReservasiTab extends StatelessWidget {
                         // Fungsi yang akan dijalankan saat tombol ditekan
                       },
                       clipBehavior: Clip.none,
-                      child: Text(
-                        'SAYA SENDIRI',
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                             RoundedRectangleBorder(
@@ -100,10 +83,17 @@ class ReservasiTab extends StatelessWidget {
                         backgroundColor:
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
+                      child: const Text(
+                        'SAYA SENDIRI',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 15),
+                    padding: const EdgeInsets.only(left: 15),
                     child: Container(
                       width: 130,
                       height: 40,
@@ -116,7 +106,8 @@ class ReservasiTab extends StatelessWidget {
                                 Colors.grey.withOpacity(0.5), // Warna bayangan
                             spreadRadius: 3, // Radius penyebaran bayangan
                             blurRadius: 3, // Radius blur bayangan
-                            offset: Offset(2, 3), // Posisi bayangan (x, y)
+                            offset:
+                                const Offset(2, 3), // Posisi bayangan (x, y)
                           ),
                         ],
                       ),
@@ -125,13 +116,6 @@ class ReservasiTab extends StatelessWidget {
                           // Fungsi yang akan dijalankan saat tombol ditekan
                         },
                         clipBehavior: Clip.none,
-                        child: Text(
-                          'ORANG LAIN',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold),
-                        ),
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                               RoundedRectangleBorder(
@@ -140,91 +124,116 @@ class ReservasiTab extends StatelessWidget {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.white),
                         ),
+                        child: const Text(
+                          'ORANG LAIN',
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RincianReservasi()),
+            ScrollConfiguration(
+              behavior: const ScrollBehavior().copyWith(
+                scrollbars: false,
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: context.read<AuthCubit>().dataReservasi.length,
+                itemBuilder: (context, index) {
+                  var reserve = myAuth.dataReservasi[index];
+                  DateTime date = DateTime.parse(reserve['tanggal']);
+                  String tanggal = DateFormat('EEEE, d MMMM y', 'id_ID').format(date);
+
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, left: 30, right: 30, bottom: 20),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const RincianReservasi()),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 7,
+                                offset: const Offset(0, 2),
+                              )
+                            ]),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${myAuth.dataProfil['nama']}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${tanggal}, ${reserve['jam_awal']} - ${reserve['jam_akhir']}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${reserve['dokter']}",
+                                  ),
+                                  Text(
+                                    "Spesialis A",
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   );
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 7,
-                          offset: Offset(0, 2),
-                        )
-                      ]),
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Rifky Affandy",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "Rabu, 14 Jan 2021, 12:30 - 12:50",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "dr. Legi Kustiah",
-                            ),
-                            Text(
-                              "Spesialis Kulit",
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HistoryReservasi()),
+                    MaterialPageRoute(
+                        builder: (context) => const HistoryReservasi()),
                   );
                 },
                 child: Text(
                   "LIHAT HISTORI RESERVASI",
                   style: GoogleFonts.poppins(
-                    color: Colors.blue,
-                    fontSize: 16,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.blue),
+                      color: Colors.blue,
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.blue),
                 ),
               ),
             ),

@@ -345,7 +345,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                   GreenButton(
                     onTap: () async {
                       await myAuth.postReservasi(
-                          widget.tanggal, widget.idxJadwal, 1, widget.biaya);
+                          widget.tanggal, widget.idxJadwal, myAuth.dataProfil['id_daftar_profil'], widget.biaya);
                       await Navigator.push(
                         context,
                         MaterialPageRoute(

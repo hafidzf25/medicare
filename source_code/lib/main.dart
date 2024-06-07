@@ -12,13 +12,13 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(),
-      child: MaterialApp(
+      child: const MaterialApp(
         title: 'MediCare',
         debugShowCheckedModeBanner: false,
         home: LandingPage(),
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -44,10 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    ReservasiTab(),
-    Notifikasi(),
-    Profil(),
+    const HomeScreen(),
+    const ReservasiTab(),
+    const Notifikasi(),
+    const Profil(),
   ];
 
   @override
@@ -61,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: _navigateBottomBar,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: Color(0xFF00C607),
-        items: [
+        selectedItemColor: const Color(0xFF00C607),
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return AppBar(
       automaticallyImplyLeading: false,
       title: RichText(
-        text: TextSpan(
+        text: const TextSpan(
           children: [
             TextSpan(
               text: 'My',
