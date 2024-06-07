@@ -188,7 +188,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Rifky Affandy - Orang Lain",
+                                    "${myAuth.dataProfilLain['nama']} - Orang Lain",
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -196,16 +196,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 10),
                                     child: Text(
-                                      "30 Februari 1996",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "081234567890",
+                                      "${myAuth.dataProfilLain['tanggal_lahir']}",
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                       ),

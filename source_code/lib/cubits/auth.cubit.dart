@@ -10,6 +10,7 @@ class AuthCubit extends Cubit<AuthModel> {
   Map<String, dynamic> Dokter = {};
   Map<String, dynamic> Spesialis = {};
   Map<String, dynamic> Reservasi = {};
+  Map<String, dynamic> dataProfilLain = {};
 
   List<Map<String, dynamic>> dataSpesialis = [];
   List<Map<String, dynamic>> dataDoktor = [];
@@ -45,6 +46,7 @@ class AuthCubit extends Cubit<AuthModel> {
       gethari();
       getjam();
       await getProfil(state.userID);
+      getProfilLain(state.userID);
       await getReservasiByDaftarProfil(dataProfil['id_daftar_profil']);
       // getJamKerjaDokterById(7);
     } else {
@@ -312,7 +314,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getjadwalbydoktor(int id_dokter) async {
     final response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/jam_kerja_dokter/id_dokter/$id_dokter'),
+      Uri.parse('http://127.0.0.1:8000/jam_kerja_dokter/$id_dokter'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${state.accessToken}',
@@ -404,6 +406,20 @@ class AuthCubit extends Cubit<AuthModel> {
       getReservasiByDaftarProfil(idDaftarProfil);
     } else {
       throw Exception('Failed to push reservasi');
+    }
+  }
+
+  Future<void> getProfilLain(int idUser) async {
+    final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/profil_lain/$idUser'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      dataProfilLain = jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load profil');
     }
   }
 }
