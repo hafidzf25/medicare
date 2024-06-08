@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/pages/faq.dart';
+import 'package:source_code/pages/info_obat.dart';
 import 'package:source_code/pages/landingPage.dart';
-
-import '../widgets/CustomButton.dart';
-
-import 'faq.dart';
-import 'profilPasien.dart';
-import 'rekam_medis.dart';
-import 'info_obat.dart';
+import 'package:source_code/pages/profilPasien.dart';
+import 'package:source_code/pages/rekam_medis.dart';
+import 'package:source_code/widgets/CustomButton.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -18,12 +15,19 @@ void main() {
   ));
 }
 
-class Profil extends StatelessWidget {
+class Profil extends StatefulWidget {
   const Profil({Key? key}) : super(key: key);
 
   @override
+  _ProfilState createState() => _ProfilState();
+}
+
+class _ProfilState extends State<Profil> {
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    AuthCubit myAuth = context.read<AuthCubit>();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -37,22 +41,22 @@ class Profil extends StatelessWidget {
             ),
           ),
           Container(
-            width: screenWidth, // Lebar persegi panjang
-            height: 195, // Tinggi persegi panjang
-            color: const Color(0xFF0D0A92), // Warna persegi panjang
+            width: screenWidth,
+            height: 195,
+            color: const Color(0xFF0D0A92),
           ),
           Positioned(
-            top: 85, // Atur jarak dari atas untuk "Profil Circle"
-            left: 25, // Atur jarak dari kiri untuk "Profil Circle"
+            top: 85,
+            left: 25,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Profil Saya',
                   style: TextStyle(
-                    fontSize: 24, // Ukuran teks
-                    fontWeight: FontWeight.bold, // Ketebalan teks
-                    color: Colors.white, // Warna teks
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                     fontFamily: 'Poppins',
                   ),
                 ),
@@ -63,88 +67,87 @@ class Profil extends StatelessWidget {
                     CircleAvatar(
                       radius: 55,
                       backgroundColor: Color(0xFFD9D9D9),
-                      backgroundImage: AssetImage("assets/images/${context.read<AuthCubit>().dataProfil['foto']}"),
+                      backgroundImage: AssetImage(
+                          "assets/images/${context.read<AuthCubit>().dataProfil['foto']}"),
                       child: const Icon(
-                        Icons.person, // Icon yang ingin ditampilkan
-                        size: 1, // Ukuran ikon
-                        color: Colors.black, // Warna ikon
+                        Icons.person,
+                        size: 1,
+                        color: Colors.black,
                       ),
                     ),
-                    const SizedBox(
-                        width: 20), // Atur jarak antara "CircleAvatar" dan "Hi"
+                    const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Hi ${context.read<AuthCubit>().dataProfil['nama']}!', // Teks "Hi"
+                          'Hi ${myAuth.dataProfil['nama']}!',
                           style: const TextStyle(
-                            fontSize: 20, // Ukuran teks
-                            fontWeight: FontWeight.bold, // Ketebalan teks
-                            color: Colors.white, // Warna teks
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                             fontFamily: 'Poppins',
                           ),
                         ),
-                        Text(
-                          '',
-                        ),
+                        Text(''),
                       ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 25), // Atur jarak antara "Hi" dan tombol
+                const SizedBox(height: 25),
                 CustomButton(
                   text: 'Profil',
                   iconData: Icons.person,
                   onPressed: () {
-                    // Fungsi yang akan dijalankan ketika tombol ditekan
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ProfilPasien()),
-                    );
+                    ).then((updatedData) {
+                      if (updatedData != null) {
+                        setState(() {
+                          myAuth.dataProfil = updatedData;
+                        });
+                      }
+                    });
                   },
                 ),
-                const SizedBox(height: 15), // Atur jarak antara "Hi" dan tombol
+                const SizedBox(height: 15),
                 CustomButton(
                   text: 'Rekam Medis',
                   iconData: Icons.medical_services,
                   onPressed: () {
-                    // Fungsi yang akan dijalankan ketika tombol ditekan
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RekamMedis()),
                     );
                   },
                 ),
-                const SizedBox(height: 15), // Atur jarak antara "Hi" dan tombol
+                const SizedBox(height: 15),
                 CustomButton(
                   text: 'Info Obat',
                   iconData: Icons.medication_rounded,
                   onPressed: () {
-                    // Fungsi yang akan dijalankan ketika tombol ditekan
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => InfoObat()),
                     );
                   },
                 ),
-                const SizedBox(height: 15), // Atur jarak antara "Hi" dan tombol
+                const SizedBox(height: 15),
                 CustomButton(
                   text: 'Pusat Bantuan',
                   iconData: Icons.live_help,
                   onPressed: () {
-                    // Fungsi yang akan dijalankan ketika tombol ditekan
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => FAQ()),
                     );
                   },
                 ),
-                const SizedBox(height: 15), // Atur jarak antara "Hi" dan tombol
+                const SizedBox(height: 15),
                 CustomButton(
                   text: 'Keluar',
                   iconData: Icons.logout,
                   onPressed: () {
-                    // Fungsi yang akan dijalankan ketika tombol ditekan
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LandingPage()),
