@@ -1,5 +1,6 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:source_code/pages/info_obat.dart';
 import 'package:source_code/pages/reservasi.dart';
 
 void main() {
@@ -19,14 +20,29 @@ class RincianReservasi extends StatefulWidget {
 class _RincianReservasiState extends State<RincianReservasi> {
   int currentStep = 0;
   String? selectedBank;
+  Set<String> selectedDiagnoses = {};
+  double totalMedicinePrice = 0;
+  
+  
+
+  bool get isStep5 => currentStep == 4;
 
   void _advanceStep(int step) {
     setState(() {
-      currentStep = step;
+      if (currentStep == 3 && step == 4) {
+        currentStep = 4;
+      } else {
+        currentStep = step;
+      }
     });
   }
 
+
   bool get isStep3 => currentStep == 2;
+  bool get isStep4 => currentStep == 3;
+
+  
+
 
   void _showBankSelectionDialog() {
     showDialog(
@@ -94,6 +110,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
                         value: 'BNI',
                       ),
                     ],
+                    
                     onChanged: (String? value) {
                       setState(() {
                         selectedBank = value;
@@ -129,14 +146,24 @@ class _RincianReservasiState extends State<RincianReservasi> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Biaya Rp. 20000'),
+              if (currentStep == 0) 
+              Text('Biaya: Rp. 20.000'),
+            if (currentStep == 4)
+              Text('Biaya: Rp. $totalMedicinePrice'),
             ],
           ),
           actions: [
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _advanceStep(1); // Advance to the next step after confirming payment
+                 if (currentStep == 4) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InfoObat()),
+                  );
+                } else {
+                  _advanceStep(1); // Advance to the next step after confirming payment
+                }
               },
               child: Text('KONFIRMASI'),
             ),
@@ -146,14 +173,59 @@ class _RincianReservasiState extends State<RincianReservasi> {
     );
   }
 
+  void _showLoadingScreen() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.of(context).pop();
+          _advanceStep(3); // Advance to step 4 after loading
+        });
+
+        return AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("Menunggu diagnosis dokter"),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _toggleDiagnosisSelection(String diagnosis) {
+    setState(() {
+      if (selectedDiagnoses.contains(diagnosis)) {
+        selectedDiagnoses.remove(diagnosis);
+      } else {
+        selectedDiagnoses.add(diagnosis);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
+     const List<Map<String, dynamic>> medicines = [
+      {'name': 'Paracetamol', 'price': 5000},
+      {'name': 'Promag', 'price': 5000},
+    ];
+
+    totalMedicinePrice = medicines.map<double>((medicine) => medicine['price'] as double).reduce((a, b) => a + b);
+
 
     List<String> stepDescriptions = [
       "Silahkan lakukan pembayaran",
       "Pindai kode QR untuk Check In",
       "Silahkan klik tombol Check In",
+      "Silahkan pilih diagnosis",
+      "Silahkan lakukan pembayaran obat",
+  
+      
     ];
 
     return Scaffold(
@@ -245,7 +317,8 @@ class _RincianReservasiState extends State<RincianReservasi> {
                 ),
               ),
             ),
-          if (currentStep >= 1)
+            
+          if (currentStep  < 3 && currentStep >=1 )
             Padding(
               padding: EdgeInsets.only(top: 30),
               child: Center(
@@ -255,10 +328,12 @@ class _RincianReservasiState extends State<RincianReservasi> {
                         size: 100,
                         color: Colors.green,
                       )
-                    : Image.asset(
-                        "assets/icon/QR.png",
-                        alignment: Alignment.center,
-                      ),
+                    : currentStep == 3 && currentStep != 5
+                        ? Container()
+                        : Image.asset(
+                            "assets/icon/QR.png",
+                            alignment: Alignment.center,
+                          ),
               ),
             ),
           if (currentStep >= 1 && currentStep < 2)
@@ -292,7 +367,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
                 width: 300,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(3, (index) {
+                  children: List.generate(5, (index) {
                     return GestureDetector(
                       onTap: () => _advanceStep(index),
                       child: Row(
@@ -312,9 +387,9 @@ class _RincianReservasiState extends State<RincianReservasi> {
                               ),
                             ),
                           ),
-                          if (index < 2)
+                          if (index < 4)
                             Container(
-                              width: 113,
+                              width: 45,
                               height: 2,
                               color: currentStep > index
                                   ? Colors.blue
@@ -360,7 +435,9 @@ class _RincianReservasiState extends State<RincianReservasi> {
                             ? "Menunggu pembayaran"
                             : currentStep == 1
                                 ? "Menunggu verifikasi pasien"
-                                : "Menunggu Check In",
+                                : currentStep == 2
+                                    ? "Menunggu Check In"
+                                    : "Pilih sesuai dengan hasil rawat jalan",
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
                         ),
@@ -371,140 +448,321 @@ class _RincianReservasiState extends State<RincianReservasi> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-              left: 30,
-              right: 30,
-              bottom: 4,
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(
+                top: 20,
+                left: 30,
+                right: 30,
+                bottom: 4,
+              ),
+              child: Text("INFORMASI PASIEN"),
             ),
-            child: Text("INFORMASI PASIEN"),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 0),
-            child: Center(
-              child: Container(
-                width: 400,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Rifky Affandy",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(top: 0),
+              child: Center(
+                child: Container(
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
                     ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Rifky Affandy",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 30,
-              right: 30,
-              bottom: 4,
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                left: 30,
+                right: 30,
+                bottom: 4,
+              ),
+              child: Text("INFORMASI JANJI TEMU"),
             ),
-            child: Text("INFORMASI JANJI TEMU"),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 0),
-            child: Center(
-              child: Container(
-                width: 400,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Rabu, 14 Feb 2024, 12:30 - 12:50",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(top: 0),
+              child: Center(
+                child: Container(
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
                     ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Rabu, 14 Feb 2024, 12:30 - 12:50",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 30,
-              right: 30,
-              bottom: 4,
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                left: 30,
+                right: 30,
+                bottom: 4,
+              ),
+              child: Text("INFORMASI BIAYA OPERASIONAL"),
             ),
-            child: Text("INFORMASI BIAYA OPERASIONAL"),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 0),
-            child: Center(
-              child: Container(
-                width: 400,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Rp. 20000",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(top: 0),
+              child: Center(
+                child: Container(
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
                     ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Rp. 20000",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
+          if (isStep4)
+            Padding(
+              padding: EdgeInsets.only(top: 10, left: 30, right: 30),
+              child: Center(
+                child: Container(
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Diagnosis",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
+                        ),
+                        GestureDetector(
+                          onTap: () => _toggleDiagnosisSelection('Batuk'),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            decoration: BoxDecoration(
+                              color: selectedDiagnoses.contains('Batuk')
+                                  ? Colors.blue
+                                  : Colors.white,
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text('Batuk'),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => _toggleDiagnosisSelection('Pilek'),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            decoration: BoxDecoration(
+                              color: selectedDiagnoses.contains('Pilek')
+                                  ? Colors.blue
+                                  : Colors.white,
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text('Pilek'),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => _toggleDiagnosisSelection('Demam'),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            decoration: BoxDecoration(
+                              color: selectedDiagnoses.contains('Demam')
+                                  ? Colors.blue
+                                  : Colors.white,
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text('Demam'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+         if (isStep5)
+  Padding(
+    padding: EdgeInsets.only(top: 20),
+    child: Center(
+      child: Container(
+        width: 400,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Informasi Obat",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              SizedBox(height: 10),
+              // Menampilkan informasi obat secara dinamis
+              for (var medicine in medicines)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(medicine['name'].toString()),
+                    Text("Rp. ${medicine['price']}"),
+                  ],
+                ),
+              SizedBox(height: 5),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Total",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // Menampilkan total harga obat secara dinamis
+                  Text(
+                    "Rp. $totalMedicinePrice",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                     _showBankSelectionDialog();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.green,
+                    ),
+                    child: Text(
+                      "BAYAR DISINI",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
+    ),
+  ),
+
+if (currentStep < 4)
           Padding(
             padding: EdgeInsets.only(top: 30, left: 40, right: 40, bottom: 10),
             child: GestureDetector(
               onTap: () {
                 if (isStep3) {
-                  // Perform Check-In action
-                  // You can define what happens when the button is clicked in step 3 here
-                  print('Checked In');
+                  _showLoadingScreen(); // Show loading screen before advancing to step 4
+                } else if (isStep4 && selectedDiagnoses.isNotEmpty) {
+                  // Perform action after selecting diagnosis
+                  print('Diagnoses selected: $selectedDiagnoses');
+                  // Advance to the next screen or perform any other action
+                  _advanceStep(4);
                 }
               },
               child: Container(
@@ -515,11 +773,13 @@ class _RincianReservasiState extends State<RincianReservasi> {
                   borderRadius: BorderRadius.circular(25),
                   color: isStep3
                       ? Colors.green
-                      : Colors.black.withOpacity(0.4),
+                      : isStep4 && selectedDiagnoses.isNotEmpty
+                          ? Colors.green
+                          : Colors.black.withOpacity(0.4),
                 ),
                 child: Center(
                   child: Text(
-                    "CHECK IN",
+                    isStep4 ? "SELANJUTNYA" : "CHECK IN",
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.white,
@@ -529,26 +789,27 @@ class _RincianReservasiState extends State<RincianReservasi> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 20),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  // Function to be executed when text is tapped
-                  // Place the action you want to perform when the text is tapped here
-                },
-                child: Text(
-                  'BATALKAN RESERVASI',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.red,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.red,
+          if (!isStep4 && !isStep5)
+            Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // Function to be executed when text is tapped
+                    // Place the action you want to perform when the text is tapped here
+                  },
+                  child: Text(
+                    'BATALKAN RESERVASI',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.red,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.red,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

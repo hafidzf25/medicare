@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:source_code/pages/isi_hasillab.dart';
 import 'package:source_code/pages/isi_hasilradiologi.dart';
+import 'package:source_code/pages/profil.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -31,7 +32,10 @@ class InfoObat extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Kembali ke halaman sebelumnya
-                    Navigator.pop(context);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => Profil()),
+                      ModalRoute.withName('/'), // Hapus semua rute lain dari tumpukan rute
+                  );
                   },
                   child: Image.asset(
                     'assets/icon/Cancel.png',
