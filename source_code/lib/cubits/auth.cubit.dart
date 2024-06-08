@@ -422,4 +422,22 @@ class AuthCubit extends Cubit<AuthModel> {
       throw Exception('Failed to load profil');
     }
   }
+
+    Future<void> tambahProfilLain(int userID, String nama, String jenisKelamin, String tanggalLahir, String foto) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/profil_lain/$userID'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "nama": nama,
+        "jenis_kelamin": jenisKelamin,
+        "tanggal_lahir": tanggalLahir,
+        "foto": foto
+      }),
+    );
+    }
+
+  
+  
 }
