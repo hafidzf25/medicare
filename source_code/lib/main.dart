@@ -37,12 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  Future<void> _navigateBottomBar(int index) async {
-    AuthCubit myAuth = context.read<AuthCubit>();
-    if (index == 1) {
-      print("tes");
-      await context.read<AuthCubit>().getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
-    }
+  void _navigateBottomBar(int index) {
     setState(() {
       _selectedIndex = index;
     });

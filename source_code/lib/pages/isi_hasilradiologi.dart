@@ -116,12 +116,12 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                             BorderRadius.circular(300),
                                         child: Image.asset(
                                           "assets/icon/person1.jpg",
-                                          width: screenWidth * 0.18,
+                                          width: 100,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -131,30 +131,30 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                             "Nama",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Umur",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Tanggal",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Jenis Kelamin",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -164,25 +164,25 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                             ": Rifky Afandi",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 18",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 29 Februari 1996",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": Pria",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
@@ -193,12 +193,12 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                     "Tes : Sinar-X Toraks",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.03),
+                                        fontSize: 15),
                                   ),
                                   Text(
                                     "Hasil Sinar-X Toraks menunjukkan adanya fraktur pada tulang iga kiri ke-4 dan ke-5",
                                     style:
-                                        TextStyle(fontSize: screenWidth * 0.03),
+                                        TextStyle(fontSize: 15),
                                   ),
                                 ],
                               ),
@@ -238,12 +238,12 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(50),
                                         child: Image.asset(
                                           "assets/icon/person2.png",
-                                          width: screenWidth * 0.18,
+                                          width: 100,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -253,30 +253,30 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                             "Nama",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Umur",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Tanggal",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Jenis Kelamin",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -286,25 +286,25 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                             ": Anies Baswedan",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 50",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 7 Mei 1969",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": Pria",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
@@ -315,12 +315,12 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                     "Tes : Ultrasonografi Abdomen",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.03),
+                                        fontSize: 15),
                                   ),
                                   Text(
                                     "Pemeriksaan ultrasonografi menunjukkan adanya batu empedu dengan diameter sekitar 1,2 cm.",
                                     style:
-                                        TextStyle(fontSize: screenWidth * 0.03),
+                                        TextStyle(fontSize: 15),
                                   ),
                                 ],
                               ),

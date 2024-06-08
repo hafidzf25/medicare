@@ -18,6 +18,7 @@ class AuthCubit extends Cubit<AuthModel> {
   List<Map<String, dynamic>> dataHari = [];
   List<Map<String, dynamic>> hariKerja = [];
   List<Map<String, dynamic>> dataJam = [];
+  List<Map<String, dynamic>> dataHistoryReservasi = [];
   List<Map<String, dynamic>> dataReservasi = [];
   List<Map<String, dynamic>> dataReservasiLain = [];
   List<Map<String, dynamic>> dataBlokJadwal = [];
@@ -58,6 +59,7 @@ class AuthCubit extends Cubit<AuthModel> {
       await getProfil(state.userID);
       await getProfilLain(state.userID);
       await getReservasiByDaftarProfil(dataProfil['id_daftar_profil']);
+      await getReservasiDoneByDaftarProfil(dataProfil['id_daftar_profil']);
     } else {
       emit(AuthModel(
           userID: 0, accessToken: "", error: "Email atau password salah"));
@@ -336,7 +338,8 @@ class AuthCubit extends Cubit<AuthModel> {
   // Mengambil data daftar profil berdasarkan id daftar profil
   Future<dynamic> getDaftarProfilByIdDaftarProfil(int idDaftarProfil) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/daftarprofil/id_daftar_profil/$idDaftarProfil'),
+        Uri.parse(
+            'http://127.0.0.1:8000/daftarprofil/id_daftar_profil/$idDaftarProfil'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -449,6 +452,12 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
+  /*
+  
+    ENDPOINT MENGENAI RESERVASI
+  
+   */
+
   Future<void> getReservasiById(int idReservasi, bool isProfil) async {
     final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/reservasi/$idReservasi'),
@@ -462,7 +471,8 @@ class AuthCubit extends Cubit<AuthModel> {
 
       DateTime date = DateTime.parse(body['tanggal']);
       var tempJam = await getJamKerjaDokterById(body['id_jam_kerja_dokter']);
-      var nama = await getDaftarProfilByIdDaftarProfil(body['id_daftar_profil']);
+      var nama =
+          await getDaftarProfilByIdDaftarProfil(body['id_daftar_profil']);
       var tempNama;
 
       if (isProfil) {
@@ -470,14 +480,40 @@ class AuthCubit extends Cubit<AuthModel> {
       } else {
         tempNama = await getProfilLainById(nama['id_profil_lain']);
       }
-      
+
       Reservasi['id'] = body['id'];
       Reservasi['nama'] = tempNama['nama'];
       Reservasi['tanggal'] = DateFormat('EEEE, d MMMM y', 'id_ID').format(date);
       Reservasi['biaya'] = body['biaya'];
       Reservasi['jam_awal'] = tempJam['jam_awal'].substring(0, 5);
       Reservasi['jam_akhir'] = tempJam['jam_akhir'].substring(0, 5);
+      Reservasi['status'] = body['status'];
 
+      print(Reservasi);
+    } else if (response.statusCode == 404) {
+    } else {
+      throw Exception('Failed to load reservasi');
+    }
+  }
+
+  Future<void> setStatusReservasiById(int idReservasi, int status) async {
+    final response = await http.put(
+      Uri.parse('http://127.0.0.1:8000/reservasi_edit_status/$idReservasi'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {
+          "status": status,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      print(body);
+      Reservasi['status'] = body['status'];
       print(Reservasi);
     } else if (response.statusCode == 404) {
     } else {
@@ -537,6 +573,33 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
+  Future<void> getReservasiDoneByDaftarProfil(int idDaftarProfil) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/status_done/$idDaftarProfil'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataHistoryReservasi = hasil;
+      for (var i = 0; i < dataHistoryReservasi.length; i++) {
+        var temp = await getJamKerjaDokterById(
+            dataHistoryReservasi[i]['id_jam_kerja_dokter']);
+        dataHistoryReservasi[i]['dokter'] = temp['dokter'];
+        dataHistoryReservasi[i]['spesialis'] = temp['spesialis'];
+        dataHistoryReservasi[i]['jam_awal'] = temp['jam_awal'].substring(0, 5);
+        dataHistoryReservasi[i]['jam_akhir'] = temp['jam_akhir'].substring(0, 5);
+        dataHistoryReservasi[i]['nama'] = dataProfil['nama'];
+      }
+    } else {
+      throw Exception('Failed to load history reservasi');
+    }
+  }
+
   Future<void> getReservasiByDaftarProfilLain(
       int idDaftarProfil, int idx) async {
     final response = await http.get(
@@ -563,6 +626,35 @@ class AuthCubit extends Cubit<AuthModel> {
       dataReservasi.addAll(hasil);
     } else {
       throw Exception('Failed to load reservasi');
+    }
+  }
+
+  Future<void> getReservasiDoneByDaftarProfilLain(
+      int idDaftarProfil, int idx) async {
+    final response = await http.get(
+      Uri.parse(
+          'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/status_done/$idDaftarProfil'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      for (var i = 0; i < hasil.length; i++) {
+        var temp = await getJamKerjaDokterById(hasil[i]['id_jam_kerja_dokter']);
+        hasil[i]['dokter'] = temp['dokter'];
+        hasil[i]['spesialis'] = temp['spesialis'];
+        hasil[i]['jam_awal'] = temp['jam_awal'].substring(0, 5);
+        hasil[i]['jam_akhir'] = temp['jam_akhir'].substring(0, 5);
+        var nama = await getProfilLainById(idx);
+        hasil[i]['nama'] = nama['nama'];
+      }
+      dataHistoryReservasi.addAll(hasil);
+    } else {
+      throw Exception('Failed to load history reservasi');
     }
   }
 

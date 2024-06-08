@@ -51,7 +51,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                 width: 8,
               ),
               Text(
-                "Pilih Profil Pasien",
+                "Daftar Profil",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -160,17 +160,11 @@ class _ProfilPasienState extends State<ProfilPasien> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: myAuth.dataProfilLain.length,
                     itemBuilder: (context, index) {
+                      print(myAuth.dataProfilLain);
                       return Padding(
                         padding: EdgeInsets.only(top: 10, bottom: 10),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProfil(),
-                              ),
-                            );
-                          },
+                          onTap: () {},
                           child: Container(
                             width: screenWidth * 0.9,
                             decoration: BoxDecoration(
