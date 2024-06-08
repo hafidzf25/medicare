@@ -245,7 +245,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Melakukan get data jam yang ada dalam db
   Future<void> getjam() async {
     final response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/jam/?skip=0&limit=10'),
+      Uri.parse('http://127.0.0.1:8000/jam/'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${state.accessToken}',

@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,9 +11,42 @@ void main() {
   ));
 }
 
-class Reservasi3 extends StatelessWidget {
+class Reservasi3 extends StatefulWidget {
   Reservasi3({super.key, this.id_spesialis = 0});
   final int id_spesialis;
+
+  @override
+  _Reservasi3State createState() => _Reservasi3State();
+}
+
+class _Reservasi3State extends State<Reservasi3> {
+  TextEditingController searchController = TextEditingController();
+  List<dynamic> filteredDoktor = [];
+
+  @override
+  void initState() {
+    super.initState();
+    AuthCubit myAuth = context.read<AuthCubit>();
+    filteredDoktor = myAuth.dataDoktor;
+    searchController.addListener(_filterDoktor);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_filterDoktor);
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterDoktor() {
+    AuthCubit myAuth = context.read<AuthCubit>();
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredDoktor = myAuth.dataDoktor.where((doktor) {
+        return doktor['nama'].toString().toLowerCase().contains(query);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +101,7 @@ class Reservasi3 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
                       suffixIcon: Icon(
                         Icons.search,
@@ -100,21 +133,21 @@ class Reservasi3 extends StatelessWidget {
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: myAuth.dataDoktor.length,
+                    itemCount: filteredDoktor.length,
                     itemBuilder: (context, index) {
-                      var Doktor = myAuth.dataDoktor[index];
+                      var doktor = filteredDoktor[index];
                       return Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: GestureDetector(
                           onTap: () async {
-                            await myAuth.getjadwalbydoktor(Doktor['id']);
-                            await myAuth.getDokter(Doktor['id']);
-                            await myAuth.getSpesialis(Doktor['id_spesialis']);
+                            await myAuth.getjadwalbydoktor(doktor['id']);
+                            await myAuth.getDokter(doktor['id']);
+                            await myAuth.getSpesialis(doktor['id_spesialis']);
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PilihDokter(
-                                  id_dokter: Doktor['id'],
+                                  id_dokter: doktor['id'],
                                 ),
                               ),
                             );
@@ -140,7 +173,7 @@ class Reservasi3 extends StatelessWidget {
                                     padding: EdgeInsets.only(right: 10),
                                     child: Image(
                                       image: AssetImage(
-                                          "assets/images/dokter/${Doktor['foto']}"),
+                                          "assets/images/dokter/${doktor['foto']}"),
                                       width: 70,
                                       height: 70,
                                     ),
@@ -151,7 +184,7 @@ class Reservasi3 extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${Doktor['nama']}",
+                                        "${doktor['nama']}",
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
                                         ),
