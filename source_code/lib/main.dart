@@ -37,7 +37,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  void _navigateBottomBar(int index) {
+  Future<void> _navigateBottomBar(int index) async {
+    AuthCubit myAuth = context.read<AuthCubit>();
+    if (index == 1) {
+      print("tes");
+      await context.read<AuthCubit>().getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+    }
     setState(() {
       _selectedIndex = index;
     });
@@ -45,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const ReservasiTab(),
+   ReservasiTab(),
     const Notifikasi(),
     const Profil(),
   ];

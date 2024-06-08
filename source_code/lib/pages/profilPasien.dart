@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
@@ -154,61 +155,69 @@ class _ProfilPasienState extends State<ProfilPasien> {
                       fontSize: 18,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfil(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: screenWidth * 0.9,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 1,
-                              offset: Offset(0, 3),
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: myAuth.dataProfilLain.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfil(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: screenWidth * 0.9,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 1,
+                                  offset: Offset(0, 3),
+                                )
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    "${myAuth.dataProfilLain['nama']} - Orang Lain",
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "${myAuth.dataProfilLain['tanggal_lahir']}",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${myAuth.dataProfilLain[index]['nama']} - Orang Lain",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 10),
+                                        child: Text(
+                                          "${myAuth.dataProfilLain[index]['tanggal_lahir']}",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   SizedBox(height: 10),
                   InkWell(

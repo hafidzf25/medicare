@@ -1,5 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/reservasi.dart';
 
 void main() {
@@ -148,6 +150,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
 
   @override
   Widget build(BuildContext context) {
+    AuthCubit myAuth = context.read<AuthCubit>();
     double screenWidth = MediaQuery.of(context).size.width;
 
     List<String> stepDescriptions = [
@@ -403,7 +406,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Rifky Affandy",
+                        "${myAuth.Reservasi['nama']}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
@@ -445,7 +448,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Rabu, 14 Feb 2024, 12:30 - 12:50",
+                        "${myAuth.Reservasi['tanggal']}, ${myAuth.Reservasi['jam_awal']} - ${myAuth.Reservasi['jam_akhir']}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
@@ -487,7 +490,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Rp. 20000",
+                        "${myAuth.Reservasi['biaya']}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
