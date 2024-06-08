@@ -95,7 +95,7 @@ class PilihDokter extends StatelessWidget {
                               padding: EdgeInsets.only(right: 10),
                               child: Image(
                                 image: AssetImage(
-                                    "assets/images/${myAuth.Dokter['foto']}"),
+                                    "assets/images/Dokter/${myAuth.Dokter['foto']}"),
                                 width: 70,
                                 height: 70,
                               ),

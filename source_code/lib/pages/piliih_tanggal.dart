@@ -75,25 +75,25 @@ class _PilihTanggalState extends State<PilihTanggal> {
     }
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xFFC1F4FF),
+      backgroundColor: const Color(0xFFC1F4FF),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         toolbarHeight: 100,
-        backgroundColor: Color(0xFF0D0A92),
+        backgroundColor: const Color(0xFF0D0A92),
         title: Padding(
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           child: Row(
             children: [
               IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 8,
               ),
               Text(
@@ -111,7 +111,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -135,15 +135,15 @@ class _PilihTanggalState extends State<PilihTanggal> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
                   child: TableCalendar(
                     locale: "en_US",
                     rowHeight: 43,
-                    calendarStyle: CalendarStyle(
-                      defaultTextStyle: TextStyle(color: Colors.black),
+                    calendarStyle: const CalendarStyle(
+                      defaultTextStyle: TextStyle(color: Colors.green),
                       weekendTextStyle: TextStyle(color: Colors.red),
                       outsideDaysVisible: false,
                       selectedDecoration: BoxDecoration(
@@ -152,11 +152,11 @@ class _PilihTanggalState extends State<PilihTanggal> {
                       ),
                       selectedTextStyle: TextStyle(color: Colors.white),
                     ),
-                    daysOfWeekStyle: DaysOfWeekStyle(
+                    daysOfWeekStyle: const DaysOfWeekStyle(
                       weekdayStyle: TextStyle(color: Colors.black),
                       weekendStyle: TextStyle(color: Colors.red),
                     ),
-                    headerStyle: HeaderStyle(
+                    headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
                       titleTextStyle: TextStyle(fontSize: 20),
                       titleCentered: true,
@@ -166,7 +166,19 @@ class _PilihTanggalState extends State<PilihTanggal> {
                     focusedDay: today,
                     firstDay: DateTime.now(),
                     lastDay: DateTime(2030),
-                    onDaySelected: _onDaySelected,
+                    // onDaySelected: _onDaySelected,
+                    onDaySelected: (selectedDay, focusedDay) async {
+                      String tanggal =
+                          selectedDay.toIso8601String().split('T')[0];
+                      await myAuth.getReservasiByTanggal(tanggal);
+                      setState(
+                        () {
+                          today = selectedDay;
+                          _showTimePicker(
+                              context); // Show the time picker when a day is selected
+                        },
+                      );
+                    },
                     enabledDayPredicate: (day) {
                       return disabledDays.contains(day.weekday);
                     },
@@ -175,16 +187,16 @@ class _PilihTanggalState extends State<PilihTanggal> {
                         return Center(
                           child: Text(
                             '${day.day}',
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors
-                                    .grey), // Gaya untuk tanggal yang dinonaktifkan
+                                    .red), // Gaya untuk tanggal yang dinonaktifkan
                           ),
                         );
                       },
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -194,31 +206,31 @@ class _PilihTanggalState extends State<PilihTanggal> {
                         Container(
                           width: 20,
                           height: 20,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
+                          decoration: const BoxDecoration(
+                            color: Colors.green,
                             shape: BoxShape.rectangle,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Container(
                           width: 20,
                           height: 20,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.red,
                             shape: BoxShape.rectangle,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(width: 8),
-                    Column(
+                    const SizedBox(width: 8),
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Tersedia",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black,
+                            color: Colors.green,
                           ),
                         ),
                         Text(
@@ -233,14 +245,8 @@ class _PilihTanggalState extends State<PilihTanggal> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(top: 10),
                   child: GestureDetector(
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) => Reservasi()),
-                    //   );
-                    // },
                     child: Container(
                       width: screenWidth * 0.9,
                       decoration: BoxDecoration(
@@ -251,19 +257,19 @@ class _PilihTanggalState extends State<PilihTanggal> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 1,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           )
                         ],
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         child: Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(right: 10),
                               child: Image(
                                 image: AssetImage(
-                                    "assets/images/${Doktor['foto']}"),
+                                    "assets/images/Dokter/${Doktor['foto']}"),
                                 width: 70,
                                 height: 70,
                               ),
@@ -279,7 +285,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10),
+                                  padding: const EdgeInsets.only(top: 10),
                                   child: Text(
                                     "${Spesialis['nama']}",
                                     style: GoogleFonts.poppins(
@@ -329,6 +335,12 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
   }
 
   @override
+  Future<void> ambilTanggalBlocked() async {
+    String tanggal = widget.selectedDate.toIso8601String().split('T')[0];
+    await context.read<AuthCubit>().getReservasiByTanggal(tanggal);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     AuthCubit myAuth = context.read<AuthCubit>();
@@ -340,12 +352,25 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
         .where((item) => item["id_hari"] == tanggalDipilih)
         .toList();
 
-    print(hasil);
-
     String tanggal = widget.selectedDate.toIso8601String().split('T')[0];
 
     String locale = '';
     initializeDateFormatting('id_ID', locale);
+
+    myAuth.getReservasiByTanggal(tanggal);
+    List<Map<String, dynamic>> BlokJadwal = myAuth.dataBlokJadwal
+        .where((reservasi) => reservasi['tanggal'] == tanggal)
+        .toList();
+    // print(BlokJadwal);
+    // print(hasil);
+
+    // Buat List baru untuk menyimpan elemen hasil yang id-nya tidak ada di BlokJadwal pada key id_jam_kerja_dokter
+    List<Map<String, dynamic>> newHasil = hasil
+        .where((hasilItem) => !BlokJadwal.any(
+            (blokItem) => hasilItem['id'] == blokItem['id_jam_kerja_dokter']))
+        .toList();
+
+    print(newHasil);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -354,12 +379,12 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
         child: Container(
           width: screenWidth,
           height: screenHeight * 0.7,
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 20,
             right: 20,
             top: 20, // Menambahkan jarak dari ujung atas pop-up
           ),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(40),
@@ -369,7 +394,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Text(
                   DateFormat('EEEE, d MMMM y', 'id_ID').format(
                       widget.selectedDate), // Tampilkan tanggal yang dipilih
@@ -380,66 +405,114 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Text(
-                'Pilih dan tekan Lanjut untuk memilih waktu',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                ),
-              ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Expanded(
                 child: ListView.separated(
-                  itemCount: hasil.length, // Total waktu yang ditampilkan
+                  itemCount: newHasil.isEmpty
+                      ? 1
+                      : newHasil.length, // Total waktu yang ditampilkan
                   separatorBuilder: (BuildContext context, int index) {
-                    return Divider(
+                    return const Divider(
                       color: Colors.grey,
                     );
                   },
                   itemBuilder: (BuildContext context, int index) {
-                    var indexJam = hasil[index]['id_jam'];
-                    // var jam = myAuth.dataJam[indexJam - 1];
-                    var jam = myAuth.dataJam
-                        .firstWhere((item) => item["id"] == indexJam);
-
-                    List<String> jamawal = jam['jam_awal'].split(':');
-                    int hour = int.parse(jamawal[0]); // Start from 7:00 AM
-                    int minute = int.parse(jamawal[1]);
-                    final time = TimeOfDay(hour: hour, minute: minute);
-
-                    List<String> jamakhir = jam['jam_akhir'].split(':');
-                    hour = int.parse(jamakhir[0]); // Start from 7:00 AM
-                    minute = int.parse(jamakhir[1]);
-                    final timeafter = TimeOfDay(hour: hour, minute: minute);
-                    return GestureDetector(
-                      onTap: () {
-                        setState(
-                          () {
-                            _selectedTime = time;
-                            indexJadwal = hasil[index]['id'];
-                          },
-                        );
-                      },
-                      child: Container(
-                        color:
-                            _selectedTime == time ? Colors.grey.shade300 : null,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        child: Center(
-                          child: Text(
-                            "${time.format(context)} - ${timeafter.format(context)}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    if (newHasil.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "Maaf, tidak ada jadwal yang tersedia di tanggal ini.",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    } else {
+                      var indexJam = newHasil[index]['id_jam'];
+                      // var jam = myAuth.dataJam[indexJam - 1];
+                      var jam = myAuth.dataJam
+                          .firstWhere((item) => item["id"] == indexJam);
+
+                      List<String> jamawal = jam['jam_awal'].split(':');
+                      int hour = int.parse(jamawal[0]); // Start from 7:00 AM
+                      int minute = int.parse(jamawal[1]);
+                      final time = TimeOfDay(hour: hour, minute: minute);
+
+                      List<String> jamakhir = jam['jam_akhir'].split(':');
+                      hour = int.parse(jamakhir[0]); // Start from 7:00 AM
+                      minute = int.parse(jamakhir[1]);
+                      final timeafter = TimeOfDay(hour: hour, minute: minute);
+                      if (index == 0) {
+                        return Column(
+                          children: [
+                            Text(
+                              'Pilih dan tekan Lanjut untuk memilih waktu',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () {
+                                setState(
+                                  () {
+                                    _selectedTime = time;
+                                    indexJadwal = newHasil[index]['id'];
+                                  },
+                                );
+                              },
+                              child: Container(
+                                color: _selectedTime == time
+                                    ? Colors.grey.shade300
+                                    : null,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Center(
+                                  child: Text(
+                                    "${time.format(context)} - ${timeafter.format(context)}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(
+                              () {
+                                _selectedTime = time;
+                                indexJadwal = newHasil[index]['id'];
+                              },
+                            );
+                          },
+                          child: Container(
+                            color: _selectedTime == time
+                                ? Colors.grey.shade300
+                                : null,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Center(
+                              child: Text(
+                                "${time.format(context)} - ${timeafter.format(context)}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_selectedTime != null) {
@@ -459,7 +532,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
                           'Pilih waktu untuk melakukan reservasi!',
                           style: GoogleFonts.poppins(),
                         ),
-                        duration: Duration(seconds: 1),
+                        duration: const Duration(seconds: 1),
                       ),
                     );
                   }
@@ -471,7 +544,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
                     },
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Lanjut',
                   style: TextStyle(
                     fontSize: 20.0,
@@ -480,7 +553,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         ),

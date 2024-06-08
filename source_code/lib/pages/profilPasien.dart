@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/editProfil.dart';
+import 'package:source_code/pages/profil.dart';
 import 'package:source_code/pages/tambahprofil.dart';
 
 void main() {
@@ -13,7 +14,7 @@ void main() {
 }
 
 class ProfilPasien extends StatefulWidget {
-  const ProfilPasien({ Key? key }) : super(key: key);
+  const ProfilPasien({Key? key}) : super(key: key);
 
   @override
   _ProfilPasienState createState() => _ProfilPasienState();
@@ -36,7 +37,9 @@ class _ProfilPasienState extends State<ProfilPasien> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(
+                    context,
+                  );
                 },
                 icon: Icon(
                   Icons.arrow_back,
@@ -185,7 +188,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Rifky Affandy - Orang Lain",
+                                    "${myAuth.dataProfilLain['nama']} - Orang Lain",
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -193,16 +196,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 10),
                                     child: Text(
-                                      "30 Februari 1996",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      "081234567890",
+                                      "${myAuth.dataProfilLain['tanggal_lahir']}",
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                       ),
@@ -220,8 +214,8 @@ class _ProfilPasienState extends State<ProfilPasien> {
                   InkWell(
                     onTap: () {
                       Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TambahProfil()),
+                        context,
+                        MaterialPageRoute(builder: (context) => TambahProfil()),
                       );
                     },
                     child: Text(

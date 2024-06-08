@@ -28,7 +28,7 @@ class _RegisUserState extends State<RegisUser> {
   final TextEditingController _passwordController = TextEditingController();
 
   void navigateToRegistrationPage() {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => RegistrationPage(),
