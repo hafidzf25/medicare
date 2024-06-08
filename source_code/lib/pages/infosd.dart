@@ -60,66 +60,69 @@ class InfoSD extends StatelessWidget {
           ),
         ),
         padding: EdgeInsets.all(20),
-        child: ListView.builder(
-          itemCount: myAuth.dataSpesialis.length,
-          itemBuilder: (context, index) {
-            var DataSpesialis = myAuth.dataSpesialis[index];
-            print(myAuth.dataSpesialis.length);
-            return Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: GestureDetector(
-                onTap: () async {
-                  await myAuth.getdoktorbyspesialis(DataSpesialis['id']);
-                  await Navigator.push( 
-                    context,
-                    MaterialPageRoute(builder: (context) => Spesialis(posisiSpesialis: index)),
-                  );
-                },
-                child: Container(
-                  width: screenWidth * 0.9,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 1,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: Image(
-                            image: AssetImage("assets/images/${DataSpesialis['foto']}"),
-                            width: 70,
-                            height: 70,
-                          ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${DataSpesialis['nama']}",
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+        child: ScrollConfiguration(
+          behavior: ScrollBehavior().copyWith(scrollbars: false),
+          child: ListView.builder(
+            itemCount: myAuth.dataSpesialis.length,
+            itemBuilder: (context, index) {
+              var DataSpesialis = myAuth.dataSpesialis[index];
+              print(myAuth.dataSpesialis.length);
+              return Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: GestureDetector(
+                  onTap: () async {
+                    await myAuth.getdoktorbyspesialis(DataSpesialis['id']);
+                    await Navigator.push( 
+                      context,
+                      MaterialPageRoute(builder: (context) => Spesialis(posisiSpesialis: index)),
+                    );
+                  },
+                  child: Container(
+                    width: screenWidth * 0.9,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 1,
+                          offset: Offset(0, 3),
                         ),
                       ],
                     ),
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 10),
+                            child: Image(
+                              image: AssetImage("assets/images/${DataSpesialis['foto']}"),
+                              width: 70,
+                              height: 70,
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${DataSpesialis['nama']}",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

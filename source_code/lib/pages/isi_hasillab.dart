@@ -108,12 +108,12 @@ class Isi_HasilLab extends StatelessWidget {
                                             BorderRadius.circular(300),
                                         child: Image.asset(
                                           "assets/icon/person1.jpg",
-                                          width: screenWidth * 0.18,
+                                          width: 100,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -123,30 +123,30 @@ class Isi_HasilLab extends StatelessWidget {
                                             "Nama",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Umur",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Tanggal",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Jenis Kelamin",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -156,25 +156,25 @@ class Isi_HasilLab extends StatelessWidget {
                                             ": Rifky Afandi",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 18",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 29 Februari 1996",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": Pria",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
@@ -185,17 +185,17 @@ class Isi_HasilLab extends StatelessWidget {
                                     "Tes: Hitung Darah Lengkap",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.03),
+                                        fontSize: 15),
                                   ),
                                   Text(
                                     "- Hemoglobin : 14",
                                     style:
-                                        TextStyle(fontSize: screenWidth * 0.03),
+                                        TextStyle(fontSize: 15),
                                   ),
                                   Text(
                                     "- Leuosit : 5",
                                     style:
-                                        TextStyle(fontSize: screenWidth * 0.03),
+                                        TextStyle(fontSize: 15),
                                   ),
                                 ],
                               ),
@@ -235,12 +235,12 @@ class Isi_HasilLab extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(50),
                                         child: Image.asset(
                                           "assets/icon/person2.png",
-                                          width: screenWidth * 0.18,
+                                          width: 100,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -250,30 +250,30 @@ class Isi_HasilLab extends StatelessWidget {
                                             "Nama",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Umur",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Tanggal",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             "Jenis Kelamin",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
                                       SizedBox(
-                                        width: screenWidth * 0.03,
+                                        width: 15,
                                       ),
                                       Column(
                                         crossAxisAlignment:
@@ -283,25 +283,25 @@ class Isi_HasilLab extends StatelessWidget {
                                             ": Anies Baswedan",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 50",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": 7 Mei 1969",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                           Text(
                                             ": Pria",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: screenWidth * 0.03),
+                                                fontSize: 15),
                                           ),
                                         ],
                                       ),
@@ -312,17 +312,17 @@ class Isi_HasilLab extends StatelessWidget {
                                     "Tes: Hitung Darah Lengkap",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.03),
+                                        fontSize: 15),
                                   ),
                                   Text(
                                     "- Hemoglobin : 14",
                                     style:
-                                        TextStyle(fontSize: screenWidth * 0.03),
+                                        TextStyle(fontSize: 15),
                                   ),
                                   Text(
                                     "- Leuosit : 5",
                                     style:
-                                        TextStyle(fontSize: screenWidth * 0.03),
+                                        TextStyle(fontSize: 15),
                                   ),
                                 ],
                               ),

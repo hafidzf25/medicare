@@ -19,10 +19,15 @@ class PeriksaJanjiTemu extends StatefulWidget {
       {super.key,
       this.tanggal = "0000-00-00",
       this.biaya = "Rp.20.000",
-      this.idxJadwal = 0});
+      this.idxJadwal = 0,
+      this.nama = '',
+      this.tanggal_lahir = '', this.idxDaftarProfil = 0});
   String tanggal;
   int idxJadwal;
   String biaya;
+  String nama;
+  String tanggal_lahir;
+  int idxDaftarProfil;
 
   @override
   _PeriksaJanjiTemuState createState() => _PeriksaJanjiTemuState();
@@ -34,7 +39,10 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
   @override
   Widget build(BuildContext context) {
     AuthCubit myAuth = context.read<AuthCubit>();
-    DateTime dateTime = DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
+    print(myAuth.dataProfil);
+    print(myAuth.dataProfilLain);
+    DateTime dateTime =
+        DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
     DateFormat dateFormat = DateFormat('d MMMM yyyy', 'id_ID');
     var tanggal = dateFormat.format(dateTime);
 
@@ -43,15 +51,17 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
 
     DateTime dateTime2 = DateTime.parse(widget.tanggal);
     DateFormat dateFormat2 = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
-    int idxJam = myAuth.hariKerja.indexWhere((element) => element['id'] == widget.idxJadwal);
+    int idxJam = myAuth.hariKerja
+        .indexWhere((element) => element['id'] == widget.idxJadwal);
 
-    var tanggalreservasi =  dateFormat2.format(dateTime2);
+    var tanggalreservasi = dateFormat2.format(dateTime2);
     var tempjam = myAuth.hariKerja[idxJam];
-    idxJam = myAuth.dataJam.indexWhere((element) => element['id'] == tempjam['id_jam']);
-    
+    idxJam = myAuth.dataJam
+        .indexWhere((element) => element['id'] == tempjam['id_jam']);
+
     var jam = myAuth.dataJam[idxJam];
-    var jamawal = jam['jam_awal'].substring(0,5);
-    var jamakhir = jam['jam_akhir'].substring(0,5);
+    var jamawal = jam['jam_awal'].substring(0, 5);
+    var jamakhir = jam['jam_akhir'].substring(0, 5);
 
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -149,7 +159,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(top: 5, bottom: 10),
                                 child: Text(
-                                  "${myAuth.dataProfil['nama']}",
+                                  "${widget.nama}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -165,7 +175,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 10),
                                 child: Text(
-                                  "${tanggal}",
+                                  "${widget.tanggal_lahir}",
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -345,7 +355,10 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                   GreenButton(
                     onTap: () async {
                       await myAuth.postReservasi(
-                          widget.tanggal, widget.idxJadwal, myAuth.dataProfil['id_daftar_profil'], widget.biaya);
+                          widget.tanggal,
+                          widget.idxJadwal,
+                          widget.idxDaftarProfil,
+                          widget.biaya);
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
