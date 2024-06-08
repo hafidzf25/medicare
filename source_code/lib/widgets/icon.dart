@@ -20,8 +20,6 @@ class IconHome extends StatelessWidget {
       ),
       CustomIcon(
           icon: "assets/icon/flask.png", name: "Hasil Lab\n dan Radiologi"),
-      CustomIcon(
-          icon: "assets/icon/medical-report.png", name: "Medical\nCheck-Up"),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -58,12 +56,6 @@ class IconHome extends StatelessWidget {
                       context,
                       MaterialPageRoute(builder: (context) => HasilLab()),
                     );
-                  } else if (index == 4) {
-                    // Fungsi yang akan dijalankan ketika tombol ditekan
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => IGD()),
-                    // );
                   }
                 },
                 child: Container(

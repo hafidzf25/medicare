@@ -32,10 +32,7 @@ class InfoObat extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Kembali ke halaman sebelumnya
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => Profil()),
-                      ModalRoute.withName('/'), // Hapus semua rute lain dari tumpukan rute
-                  );
+                    Navigator.pop(context);
                   },
                   child: Image.asset(
                     'assets/icon/Cancel.png',

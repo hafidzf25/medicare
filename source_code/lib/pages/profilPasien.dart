@@ -38,9 +38,9 @@ class _ProfilPasienState extends State<ProfilPasien> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
+  // Kembali ke halaman Profil dan kirim data yang diperbarui
+  Navigator.pop(context, myAuth.dataProfil);
+
                 },
                 icon: Icon(
                   Icons.arrow_back,
@@ -51,7 +51,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                 width: 8,
               ),
               Text(
-                "Pilih Profil Pasien",
+                "Daftar Profil",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -87,12 +87,19 @@ class _ProfilPasienState extends State<ProfilPasien> {
                     padding: EdgeInsets.only(top: 10),
                     child: GestureDetector(
                       onTap: () {
+                        // Navigasi ke halaman EditProfil
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfil(),
-                          ),
-                        );
+                          MaterialPageRoute(builder: (context) => EditProfil()),
+                        ).then((updatedData) {
+                          // Memperbarui tampilan dengan data yang diperbarui
+                          if (updatedData != null) {
+                            setState(() {
+                              // Mengubah data profil langsung di AuthCubit
+                              myAuth.dataProfil = updatedData;
+                            });
+                          }
+                        });
                       },
                       child: Container(
                         width: screenWidth * 0.9,
@@ -160,17 +167,11 @@ class _ProfilPasienState extends State<ProfilPasien> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: myAuth.dataProfilLain.length,
                     itemBuilder: (context, index) {
+                      print(myAuth.dataProfilLain);
                       return Padding(
                         padding: EdgeInsets.only(top: 10, bottom: 10),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProfil(),
-                              ),
-                            );
-                          },
+                          onTap: () {},
                           child: Container(
                             width: screenWidth * 0.9,
                             decoration: BoxDecoration(

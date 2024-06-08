@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:typed_data';
 import 'dart:html' as html;
+import 'dart:convert';
 
 import 'package:source_code/pages/profilPasien.dart';
-
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: TambahProfil(),
-  ));
-}
+import 'package:source_code/cubits/auth.cubit.dart';
 
 class TambahProfil extends StatefulWidget {
   @override
@@ -83,7 +78,6 @@ class _TambahProfilState extends State<TambahProfil> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16.0),
                   SizedBox(height: 16.0),
                   Center(
                     child: GestureDetector(
@@ -219,19 +213,32 @@ class _TambahProfilState extends State<TambahProfil> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // Proses data yang telah diisi
-                          print('Nama: $_name');
-                          print('Tanggal Lahir: $_dateOfBirth');
-                          print('Jenis Kelamin: $_gender');
-                          // Navigate to next screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ProfilPasien()),
-                          );
-                        }
-                      },
+  if (_formKey.currentState!.validate()) {
+    _formKey.currentState!.save();
+    String base64Image = '';
+    if (_galleryImageBytes != null) {
+      base64Image = base64.encode(_galleryImageBytes!);
+    }
+    final authCubit = context.read<AuthCubit>();
+    authCubit.tambahProfilLain(
+      authCubit.state.userID,
+      _name,
+      _gender,
+      _dateOfBirth.toString(),
+      base64Image,
+    ).then((_) {
+      authCubit.getProfilLain(authCubit.dataProfil['id_user']);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilPasien()),
+      );
+    }).catchError((error) {
+      // Handle error
+      print('Failed to add profile: $error');
+    });
+  }
+},
+
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
                       ),

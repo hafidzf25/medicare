@@ -27,11 +27,14 @@ class PilihPasien extends StatefulWidget {
 }
 
 class _PilihPasienState extends State<PilihPasien> {
-  bool _isSelected1 = false;
-  bool _isSelected2 = false;
+  bool isSelected = false;
+  int idxSelected = 0;
+  String nama = '';
+  String tanggal_lahir = '';
 
   @override
   Widget build(BuildContext context) {
+    AuthCubit myAuth = context.read<AuthCubit>();
     DateTime dateTime =
         DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
     DateFormat dateFormat = DateFormat('d MMMM yyyy', 'id_ID');
@@ -102,18 +105,22 @@ class _PilihPasienState extends State<PilihPasien> {
                             onTap: () {
                               setState(
                                 () {
-                                  _isSelected1 = !_isSelected1;
-                                  if (_isSelected1) {
-                                    _isSelected2 = false;
-                                  }
+                                  idxSelected =
+                                      myAuth.dataProfil['id_daftar_profil'];
+                                  isSelected = true;
+                                  nama = myAuth.dataProfil['nama'];
+                                  tanggal_lahir =
+                                      myAuth.dataProfil['tanggal_lahir'];
                                 },
                               );
                             },
                             child: Container(
                               width: screenWidth * 0.9,
                               decoration: BoxDecoration(
-                                color:
-                                    _isSelected1 ? Colors.blue : Colors.white,
+                                color: idxSelected ==
+                                        myAuth.dataProfil['id_daftar_profil']
+                                    ? Colors.blue
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
@@ -138,7 +145,9 @@ class _PilihPasienState extends State<PilihPasien> {
                                           "${context.read<AuthCubit>().dataProfil['nama']} - Saya Sendiri",
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.bold,
-                                            color: _isSelected1
+                                            color: idxSelected ==
+                                                    myAuth.dataProfil[
+                                                        'id_daftar_profil']
                                                 ? Colors.white
                                                 : Colors.black,
                                           ),
@@ -149,7 +158,9 @@ class _PilihPasienState extends State<PilihPasien> {
                                             "${tanggal}",
                                             style: GoogleFonts.poppins(
                                               fontSize: 12,
-                                              color: _isSelected1
+                                              color: idxSelected ==
+                                                      myAuth.dataProfil[
+                                                          'id_daftar_profil']
                                                   ? Colors.white
                                                   : Colors.black,
                                             ),
@@ -161,7 +172,9 @@ class _PilihPasienState extends State<PilihPasien> {
                                             "${context.read<AuthCubit>().dataProfil['notelp']}",
                                             style: GoogleFonts.poppins(
                                               fontSize: 12,
-                                              color: _isSelected1
+                                              color: idxSelected ==
+                                                      myAuth.dataProfil[
+                                                          'id_daftar_profil']
                                                   ? Colors.white
                                                   : Colors.black,
                                             ),
@@ -182,82 +195,92 @@ class _PilihPasienState extends State<PilihPasien> {
                             fontSize: 18,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isSelected2 = !_isSelected2;
-                                if (_isSelected2) {
-                                  _isSelected1 = false;
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: screenWidth * 0.9,
-                              decoration: BoxDecoration(
-                                color:
-                                    _isSelected2 ? Colors.blue : Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 1,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(15),
-                                child: Row(
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: myAuth.dataProfilLain.length,
+                          itemBuilder: (context, index) {
+                            DateTime dateTime = DateTime.parse(
+                                myAuth.dataProfilLain[index]['tanggal_lahir']);
+                            String tanggal = DateFormat('d MMMM yyyy', 'id_ID')
+                                .format(dateTime);
+                            return Padding(
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    idxSelected = myAuth.dataProfilLain[index]
+                                        ['id_daftar_profil'];
+                                    isSelected = true;
+                                    nama = myAuth.dataProfilLain[index]['nama'];
+                                    tanggal_lahir =
+                                        myAuth.dataProfilLain[index]['tanggal_lahir'];
+                                  });
+                                },
+                                child: Container(
+                                  width: screenWidth * 0.9,
+                                  decoration: BoxDecoration(
+                                    color: idxSelected ==
+                                            myAuth.dataProfilLain[index]
+                                                ['id_daftar_profil']
+                                        ? Colors.blue
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 1,
+                                        offset: Offset(0, 3),
+                                      )
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15),
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          "Rifky Affandy - Orang Lain",
-                                          style: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.bold,
-                                            color: _isSelected2
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 10),
-                                          child: Text(
-                                            "30 Februari 1996",
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              color: _isSelected2
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "${myAuth.dataProfilLain[index]['nama']} - Orang Lain",
+                                              style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.bold,
+                                                color: idxSelected ==
+                                                        myAuth.dataProfilLain[
+                                                                index]
+                                                            ['id_daftar_profil']
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 10),
-                                          child: Text(
-                                            "081234567890",
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              color: _isSelected2
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: Text(
+                                                "${tanggal}",
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: idxSelected ==
+                                                          myAuth.dataProfilLain[
+                                                                  index][
+                                                              'id_daftar_profil']
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -269,6 +292,8 @@ class _PilihPasienState extends State<PilihPasien> {
               padding: EdgeInsets.all(20),
               child: GreenButton(
                 onTap: () {
+                  print(nama);
+                  print(tanggal_lahir);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -276,6 +301,9 @@ class _PilihPasienState extends State<PilihPasien> {
                         biaya: widget.biaya,
                         tanggal: widget.tanggal,
                         idxJadwal: widget.idxJadwal,
+                        nama: nama,
+                        tanggal_lahir: tanggal_lahir,
+                        idxDaftarProfil: idxSelected,
                       ),
                     ),
                   );
@@ -283,7 +311,7 @@ class _PilihPasienState extends State<PilihPasien> {
                 text: "Lanjut",
                 width: screenWidth * 0.9,
                 height: 45,
-                isEnabled: _isSelected1 || _isSelected2,
+                isEnabled: isSelected,
               ),
             ),
           ],

@@ -201,7 +201,7 @@ class _IsiBodyState extends State<IsiBody> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RincianReservasi()),
+                            builder: (context) => RincianReservasi(status: context.read<AuthCubit>().Reservasi['status'],)),
                       );
                     },
                     child: Container(
