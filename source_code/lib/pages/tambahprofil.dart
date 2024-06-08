@@ -226,8 +226,8 @@ class _TambahProfilState extends State<TambahProfil> {
       _gender,
       _dateOfBirth.toString(),
       base64Image,
-    ).then((_) {
-      authCubit.getProfilLain(authCubit.dataProfil['id_user']);
+    ).then((_) async {
+      await authCubit.getProfilLain(authCubit.dataProfil['id_user']);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ProfilPasien()),
