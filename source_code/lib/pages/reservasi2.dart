@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +11,41 @@ void main() {
   ));
 }
 
-class Reservasi2 extends StatelessWidget {
+class Reservasi2 extends StatefulWidget {
   const Reservasi2({super.key});
+
+  @override
+  _Reservasi2State createState() => _Reservasi2State();
+}
+
+class _Reservasi2State extends State<Reservasi2> {
+  TextEditingController searchController = TextEditingController();
+  List<dynamic> filteredSpesialis = [];
+
+  @override
+  void initState() {
+    super.initState();
+    AuthCubit myAuth = context.read<AuthCubit>();
+    filteredSpesialis = myAuth.dataSpesialis;
+    searchController.addListener(_filterSpesialis);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_filterSpesialis);
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterSpesialis() {
+    AuthCubit myAuth = context.read<AuthCubit>();
+    String query = searchController.text.toLowerCase();
+    setState(() {
+      filteredSpesialis = myAuth.dataSpesialis.where((spesialis) {
+        return spesialis['nama'].toString().toLowerCase().contains(query);
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +100,7 @@ class Reservasi2 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
                       hintText: ' Cari',
                       enabledBorder: UnderlineInputBorder(
@@ -82,9 +115,9 @@ class Reservasi2 extends StatelessWidget {
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: myAuth.dataSpesialis.length,
+                    itemCount: filteredSpesialis.length,
                     itemBuilder: (context, index) {
-                      var Spesialis = myAuth.dataSpesialis[index];
+                      var spesialis = filteredSpesialis[index];
                       return Padding(
                         padding: EdgeInsets.only(top: 25),
                         child: GestureDetector(
@@ -93,8 +126,8 @@ class Reservasi2 extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Reservasi(
-                                  spesialis: '${Spesialis['nama']}',
-                                  id_spesialis: Spesialis['id'],
+                                  spesialis: '${spesialis['nama']}',
+                                  id_spesialis: spesialis['id'],
                                 ),
                               ),
                             );
@@ -116,7 +149,7 @@ class Reservasi2 extends StatelessWidget {
                             child: Padding(
                               padding: EdgeInsets.all(20),
                               child: Text(
-                                "${Spesialis['nama']}",
+                                "${spesialis['nama']}",
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold,
                                 ),
