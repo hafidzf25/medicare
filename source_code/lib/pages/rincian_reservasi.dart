@@ -26,7 +26,7 @@ class RincianReservasi extends StatefulWidget {
 class _RincianReservasiState extends State<RincianReservasi> {
   int currentStep = 0;
   String? selectedBank;
-  Set<String> selectedDiagnoses = {};
+  Set<int> selectedDiagnoses = {};
   double totalMedicinePrice = 0;
 
   @override
@@ -163,16 +163,19 @@ class _RincianReservasiState extends State<RincianReservasi> {
           actions: [
             ElevatedButton(
               onPressed: () async {
+                AuthCubit myAuth = context.read<AuthCubit>();
                 var Reservasi = context.read<AuthCubit>().Reservasi;
-                await context
-                    .read<AuthCubit>()
-                    .setStatusReservasiById(Reservasi['id'], 2);
                 Navigator.of(context).pop();
+
                 if (currentStep == 4) {
-                  await context.read<AuthCubit>().getReservasiByDaftarProfil(
-                      context.read<AuthCubit>().dataProfil['id_daftar_profil']);
-                  context.read<AuthCubit>().setStatusReservasiById(
+                  await context.read<AuthCubit>().setStatusReservasiById(
                       context.read<AuthCubit>().Reservasi['id'], 5);
+                  await myAuth.getReservasiByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+                  await myAuth.getReservasiDoneByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+                  // await context.read<AuthCubit>().getReservasiDoneByDaftarProfil(
+                  //     context.read<AuthCubit>().dataProfil['id_daftar_profil']);
                   await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -195,6 +198,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
   }
 
   void _showLoadingScreen() {
+    print(context.read<AuthCubit>().dataPenyakitReservasi);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -217,7 +221,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
     );
   }
 
-  void _toggleDiagnosisSelection(String diagnosis) {
+  void _toggleDiagnosisSelection(int diagnosis) {
     setState(() {
       if (selectedDiagnoses.contains(diagnosis)) {
         selectedDiagnoses.remove(diagnosis);
@@ -628,50 +632,28 @@ class _RincianReservasiState extends State<RincianReservasi> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 17),
                         ),
-                        GestureDetector(
-                          onTap: () => _toggleDiagnosisSelection('Batuk'),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            decoration: BoxDecoration(
-                              color: selectedDiagnoses.contains('Batuk')
-                                  ? Colors.blue
-                                  : Colors.white,
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text('Batuk'),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => _toggleDiagnosisSelection('Pilek'),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            decoration: BoxDecoration(
-                              color: selectedDiagnoses.contains('Pilek')
-                                  ? Colors.blue
-                                  : Colors.white,
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text('Pilek'),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => _toggleDiagnosisSelection('Demam'),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            decoration: BoxDecoration(
-                              color: selectedDiagnoses.contains('Demam')
-                                  ? Colors.blue
-                                  : Colors.white,
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text('Demam'),
-                          ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: myAuth.dataPenyakitReservasi.length,
+                          itemBuilder: (context, index) {
+                            var Penyakit = myAuth.dataPenyakitReservasi[index];
+                            return GestureDetector(
+                              onTap: () => _toggleDiagnosisSelection(Penyakit['id']),
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: selectedDiagnoses.contains(Penyakit['id'])
+                                      ? Colors.blue
+                                      : Colors.white,
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text('${Penyakit['nama']}'),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -775,14 +757,22 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding:
                   EdgeInsets.only(top: 30, left: 40, right: 40, bottom: 10),
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (isStep3) {
-                    myAuth.setStatusReservasiById(myAuth.Reservasi['id'], 3);
+                    await myAuth.getPenyakitDariObatByIdSpesialis(
+                        myAuth.Reservasi['id_spesialis']);
+                    await myAuth.setStatusReservasiById(
+                        myAuth.Reservasi['id'], 3);
                     _showLoadingScreen(); // Show loading screen before advancing to step 4
                   } else if (isStep4 && selectedDiagnoses.isNotEmpty) {
                     myAuth.setStatusReservasiById(myAuth.Reservasi['id'], 4);
+                    List<int> listDiagnosa = selectedDiagnoses.toList();
+                    for (var i = 0; i < listDiagnosa.length; i++) {
+                      await myAuth.getObatByIdPenyakit(listDiagnosa[i]);
+                    }
                     // Perform action after selecting diagnosis
                     print('Diagnoses selected: $selectedDiagnoses');
+                    print(myAuth.dataObatReservasi);
                     // Advance to the next screen or perform any other action
                     _advanceStep(4);
                   }

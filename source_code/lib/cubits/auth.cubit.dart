@@ -22,6 +22,8 @@ class AuthCubit extends Cubit<AuthModel> {
   List<Map<String, dynamic>> dataReservasi = [];
   List<Map<String, dynamic>> dataReservasiLain = [];
   List<Map<String, dynamic>> dataBlokJadwal = [];
+  List<Map<String, dynamic>> dataPenyakitReservasi = [];
+  List<Map<String, dynamic>> dataObatReservasi = [];
 
   void setFromJson(Map<String, dynamic> json) {
     int userID = json['user_id'];
@@ -60,6 +62,7 @@ class AuthCubit extends Cubit<AuthModel> {
       await getProfilLain(state.userID);
       await getReservasiByDaftarProfil(dataProfil['id_daftar_profil']);
       await getReservasiDoneByDaftarProfil(dataProfil['id_daftar_profil']);
+      print(dataReservasi);
     } else {
       emit(AuthModel(
           userID: 0, accessToken: "", error: "Email atau password salah"));
@@ -320,6 +323,7 @@ class AuthCubit extends Cubit<AuthModel> {
       var tempJam = await getJamById(dataJamKerjaDokter['id_jam']);
       var tempDokter = await getDokterById(dataJamKerjaDokter['id_dokter']);
       dataJamKerjaDokter['dokter'] = tempDokter['nama'];
+      dataJamKerjaDokter['id_spesialis'] = tempDokter['id_spesialis'];
       dataJamKerjaDokter['spesialis'] = tempDokter['spesialis'];
       dataJamKerjaDokter['jam_awal'] = tempJam['jam_awal'];
       dataJamKerjaDokter['jam_akhir'] = tempJam['jam_akhir'];
@@ -458,7 +462,7 @@ class AuthCubit extends Cubit<AuthModel> {
   
    */
 
-  Future<void> getReservasiById(int idReservasi, bool isProfil) async {
+  Future<void> getReservasiById(int idReservasi, bool isProfil, int idSpesialis) async {
     final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/reservasi/$idReservasi'),
         headers: {
@@ -488,6 +492,7 @@ class AuthCubit extends Cubit<AuthModel> {
       Reservasi['jam_awal'] = tempJam['jam_awal'].substring(0, 5);
       Reservasi['jam_akhir'] = tempJam['jam_akhir'].substring(0, 5);
       Reservasi['status'] = body['status'];
+      Reservasi['id_spesialis'] = idSpesialis;
 
       print(Reservasi);
     } else if (response.statusCode == 404) {
@@ -563,6 +568,7 @@ class AuthCubit extends Cubit<AuthModel> {
         var temp = await getJamKerjaDokterById(
             dataReservasi[i]['id_jam_kerja_dokter']);
         dataReservasi[i]['dokter'] = temp['dokter'];
+        dataReservasi[i]['id_spesialis'] = temp['id_spesialis'];
         dataReservasi[i]['spesialis'] = temp['spesialis'];
         dataReservasi[i]['jam_awal'] = temp['jam_awal'].substring(0, 5);
         dataReservasi[i]['jam_akhir'] = temp['jam_akhir'].substring(0, 5);
@@ -592,7 +598,8 @@ class AuthCubit extends Cubit<AuthModel> {
         dataHistoryReservasi[i]['dokter'] = temp['dokter'];
         dataHistoryReservasi[i]['spesialis'] = temp['spesialis'];
         dataHistoryReservasi[i]['jam_awal'] = temp['jam_awal'].substring(0, 5);
-        dataHistoryReservasi[i]['jam_akhir'] = temp['jam_akhir'].substring(0, 5);
+        dataHistoryReservasi[i]['jam_akhir'] =
+            temp['jam_akhir'].substring(0, 5);
         dataHistoryReservasi[i]['nama'] = dataProfil['nama'];
       }
     } else {
@@ -702,6 +709,62 @@ class AuthCubit extends Cubit<AuthModel> {
       }
     } else {
       throw Exception('Failed to load profil lain');
+    }
+  }
+
+  // Mengambil data profil lain berdasarkan id nya
+  Future<Map<String, dynamic>> getPenyakitById(int idPenyakit) async {
+    final response = await http
+        .get(Uri.parse('http://127.0.0.1:8000/penyakit/$idPenyakit'), headers: {
+      'Authorization': 'Bearer ${state.accessToken}',
+    });
+
+    if (response.statusCode == 200) {
+      var Penyakit = jsonDecode(response.body);
+      return Penyakit;
+    } else {
+      throw Exception('Failed to load penyakit');
+    }
+  }
+
+  Future<void> getPenyakitDariObatByIdSpesialis(int idSpesialis) async {
+    final response = await http
+        .get(Uri.parse('http://127.0.0.1:8000/obat/$idSpesialis'), headers: {
+      'Authorization': 'Bearer ${state.accessToken}',
+    });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      var dataObat = hasil;
+      Set<int> idPenyakit = {};
+      for (var item in dataObat) {
+        idPenyakit.add(item['id_penyakit']);
+      }
+      List<int> idPenyakitList = idPenyakit.toList();
+      for (var i = 0; i < idPenyakitList.length; i++) {
+        dataPenyakitReservasi.add(await getPenyakitById(idPenyakitList[i]));
+      }
+      print(dataPenyakitReservasi);
+    } else {
+      throw Exception('Failed to load penyakit');
+    }
+  }
+
+  Future<void> getObatByIdPenyakit(int idPenyakit) async {
+    final response = await http
+        .get(Uri.parse('http://127.0.0.1:8000/obat_by_penyakit/$idPenyakit'), headers: {
+      'Authorization': 'Bearer ${state.accessToken}',
+    });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataObatReservasi.addAll(hasil);
+    } else {
+      throw Exception('Failed to load penyakit');
     }
   }
 }

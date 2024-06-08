@@ -197,11 +197,11 @@ class _IsiBodyState extends State<IsiBody> {
                     onTap: () async {
                       await context
                           .read<AuthCubit>()
-                          .getReservasiById(reserve['id'], profil);
+                          .getReservasiById(reserve['id'], profil, reserve['id_spesialis']);
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RincianReservasi(status: context.read<AuthCubit>().Reservasi['status'],)),
+                            builder: (context) => RincianReservasi(status: reserve['status'])),
                       );
                     },
                     child: Container(
