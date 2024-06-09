@@ -53,7 +53,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Apakah Anda yakin bahwa informasi yang Anda masukkan dibawah sudah akurat?',
+                  'Apakah Anda yakin bahwa informasi yang Anda masukkan di bawah sudah akurat?',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -77,22 +77,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LandingPage(),
-                      ));
+                  Navigator.pop(context); // Tutup dialog
                 },
                 child: Text('Batal'),
               ),
               ElevatedButton(
                 onPressed: _isAgreed
                     ? () {
-                        // Tambahkan data setelah mengklik "LANJUT"
+                        // Tambahkan data setelah mengklik "Lanjut"
                         BlocProvider.of<AuthCubit>(context).tambahProfil(
-                          BlocProvider.of<AuthCubit>(context)
-                              .state
-                              .userID, // ID pengguna
+                          BlocProvider.of<AuthCubit>(context).state.userID, // ID pengguna
                           _name, // Nama
                           _gender, // Jenis Kelamin
                           _phoneNumber, // Nomor Telepon
@@ -100,8 +94,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ? "${_dateOfBirth!.year}-${_dateOfBirth!.month.toString().padLeft(2, '0')}-${_dateOfBirth!.day.toString().padLeft(2, '0')}" // Tanggal Lahir
                               : "", // Tanggal Lahir (jika tidak ada)
                           _galleryImageBytes != null
-                              ? base64Encode(
-                                  _galleryImageBytes!) // Foto (jika ada)
+                              ? base64Encode(_galleryImageBytes!) // Foto (jika ada)
                               : "", // Foto (jika tidak ada)
                         );
                         Navigator.pushReplacement(
