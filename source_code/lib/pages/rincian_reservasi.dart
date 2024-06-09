@@ -6,6 +6,7 @@ import 'package:source_code/pages/info_obat.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/landingPage.dart';
 import 'package:source_code/pages/reservasi.dart';
+import 'package:source_code/pages/reservasi_tab.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -199,6 +200,46 @@ class _RincianReservasiState extends State<RincianReservasi> {
       },
     );
   }
+
+  void _showCancellationConfirmationDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Konfirmasi Pembatalan'),
+        content: Text('Apakah Anda yakin ingin membatalkan reservasi ini?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text('Tidak'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close the dialog
+              await _cancelReservation(); // Cancel the reservation
+            },
+            child: Text('Ya'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<void> _cancelReservation() async {
+  AuthCubit myAuth = context.read<AuthCubit>();
+  await myAuth.deleteReservasi(myAuth.Reservasi['id']);
+  await myAuth.getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+  await myAuth.getReservasiDoneByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => ReservasiTab()),
+    (Route<dynamic> route) => false,
+  );
+}
+
 
   void _showLoadingScreen() {
     print(context.read<AuthCubit>().dataPenyakitReservasi);
@@ -836,10 +877,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(bottom: 20),
               child: Center(
                 child: GestureDetector(
-                  onTap: () {
-                    // Function to be executed when text is tapped
-                    // Place the action you want to perform when the text is tapped here
-                  },
+                  onTap: _showCancellationConfirmationDialog,
                   child: Text(
                     'BATALKAN RESERVASI',
                     style: TextStyle(

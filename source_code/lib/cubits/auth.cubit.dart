@@ -819,4 +819,39 @@ class AuthCubit extends Cubit<AuthModel> {
       }),
     );
   }
+
+
+  Future<void> deleteReservasi(int reservasiId) async {
+    final response = await http.delete(
+      Uri.parse('http://127.0.0.1:8000/reservasi_delete/$reservasiId'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Menghapus reservasi dari local state jika diperlukan
+      dataReservasi.removeWhere((reservasi) => reservasi['id'] == reservasiId);
+      emit(AuthModel(
+        userID: state.userID, 
+        accessToken: state.accessToken, 
+        error: ""
+      ));
+    } else if (response.statusCode == 404) {
+      emit(AuthModel(
+        userID: state.userID,
+        accessToken: state.accessToken,
+        error: "Reservasi tidak ditemukan"
+      ));
+    } else {
+      emit(AuthModel(
+        userID: state.userID,
+        accessToken: state.accessToken,
+        error: "Gagal menghapus reservasi"
+      ));
+    }
+  }
+
+  
 }
