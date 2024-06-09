@@ -14,18 +14,17 @@ class LandingPage extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Container(
-            height: screenHeight /
-                1.5, // Atur tinggi Container sesuai keinginan Anda
+            height: screenHeight / 1.5,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/icon/hospital_logo.png'), // Ganti dengan path logo Anda
-                fit: BoxFit.cover, // Anda bisa mengubah ini sesuai kebutuhan
+                image: AssetImage('assets/icon/hospital_logo.png'),
+                fit: BoxFit.cover,
               ),
               gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFFC0F3FF), Colors.white]),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFC0F3FF), Colors.white],
+              ),
             ),
           ),
           Positioned(
@@ -33,8 +32,7 @@ class LandingPage extends StatelessWidget {
             left: 0,
             right: 0,
             child: Padding(
-              padding: const EdgeInsets.all(
-                  20.0), // Atur padding sesuai keinginan Anda
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: <Widget>[
                   ElevatedButton(
@@ -45,12 +43,10 @@ class LandingPage extends StatelessWidget {
                       );
                     },
                     style: ButtonStyle(
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blue),
-                        minimumSize: MaterialStateProperty.all<Size>(
-                            Size(screenWidth * 0.5, 50))),
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(screenWidth * 0.5, 50)),
+                    ),
                     child: Text(
                       'Login',
                       style: GoogleFonts.poppins(
@@ -58,8 +54,7 @@ class LandingPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                      height: 20), // Jarak antara tombol login dan daftar
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -68,10 +63,9 @@ class LandingPage extends StatelessWidget {
                       );
                     },
                     style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                        minimumSize: MaterialStateProperty.all<Size>(
-                            Size(screenWidth * 0.5, 50))),
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(screenWidth * 0.5, 50)),
+                    ),
                     child: Text(
                       'Daftar',
                       style: GoogleFonts.poppins(
