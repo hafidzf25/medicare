@@ -38,9 +38,9 @@ class _ProfilPasienState extends State<ProfilPasien> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.pop(
-                    context,
-                  );
+  // Kembali ke halaman Profil dan kirim data yang diperbarui
+  Navigator.pop(context, myAuth.dataProfil);
+
                 },
                 icon: Icon(
                   Icons.arrow_back,
@@ -87,12 +87,19 @@ class _ProfilPasienState extends State<ProfilPasien> {
                     padding: EdgeInsets.only(top: 10),
                     child: GestureDetector(
                       onTap: () {
+                        // Navigasi ke halaman EditProfil
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfil(),
-                          ),
-                        );
+                          MaterialPageRoute(builder: (context) => EditProfil()),
+                        ).then((updatedData) {
+                          // Memperbarui tampilan dengan data yang diperbarui
+                          if (updatedData != null) {
+                            setState(() {
+                              // Mengubah data profil langsung di AuthCubit
+                              myAuth.dataProfil = updatedData;
+                            });
+                          }
+                        });
                       },
                       child: Container(
                         width: screenWidth * 0.9,

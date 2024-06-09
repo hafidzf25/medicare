@@ -170,10 +170,13 @@ class _RincianReservasiState extends State<RincianReservasi> {
                 if (currentStep == 4) {
                   await context.read<AuthCubit>().setStatusReservasiById(
                       context.read<AuthCubit>().Reservasi['id'], 5);
+                  print('lewat 1');
                   await myAuth.getReservasiByDaftarProfil(
                       myAuth.dataProfil['id_daftar_profil']);
+                  print('lewat 2');
                   await myAuth.getReservasiDoneByDaftarProfil(
                       myAuth.dataProfil['id_daftar_profil']);
+                  print('lewat 3');
                   // await context.read<AuthCubit>().getReservasiDoneByDaftarProfil(
                   //     context.read<AuthCubit>().dataProfil['id_daftar_profil']);
                   await Navigator.push(
@@ -236,14 +239,9 @@ class _RincianReservasiState extends State<RincianReservasi> {
     AuthCubit myAuth = context.read<AuthCubit>();
     double screenWidth = MediaQuery.of(context).size.width;
 
-    const List<Map<String, dynamic>> medicines = [
-      {'name': 'Paracetamol', 'price': 5000},
-      {'name': 'Promag', 'price': 5000},
-    ];
-
-    totalMedicinePrice = medicines
-        .map<double>((medicine) => medicine['price'] as double)
-        .reduce((a, b) => a + b);
+    // totalMedicinePrice = medicines
+    //     .map<double>((medicine) => medicine['price'] as double)
+    //     .reduce((a, b) => a + b);
 
     List<String> stepDescriptions = [
       "Silahkan lakukan pembayaran",
@@ -639,14 +637,16 @@ class _RincianReservasiState extends State<RincianReservasi> {
                           itemBuilder: (context, index) {
                             var Penyakit = myAuth.dataPenyakitReservasi[index];
                             return GestureDetector(
-                              onTap: () => _toggleDiagnosisSelection(Penyakit['id']),
+                              onTap: () =>
+                                  _toggleDiagnosisSelection(Penyakit['id']),
                               child: Container(
                                 padding: EdgeInsets.all(10),
                                 margin: EdgeInsets.symmetric(vertical: 5),
                                 decoration: BoxDecoration(
-                                  color: selectedDiagnoses.contains(Penyakit['id'])
-                                      ? Colors.blue
-                                      : Colors.white,
+                                  color:
+                                      selectedDiagnoses.contains(Penyakit['id'])
+                                          ? Colors.blue
+                                          : Colors.white,
                                   border: Border.all(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
@@ -693,14 +693,22 @@ class _RincianReservasiState extends State<RincianReservasi> {
                         ),
                         SizedBox(height: 10),
                         // Menampilkan informasi obat secara dinamis
-                        for (var medicine in medicines)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(medicine['name'].toString()),
-                              Text("Rp. ${medicine['price']}"),
-                            ],
-                          ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: myAuth.dataObatReservasi.length,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            var obat = myAuth.dataObatReservasi[index];
+                            totalMedicinePrice += obat['harga'];
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(obat['nama']),
+                                Text("Rp. ${obat['harga']}"),
+                              ],
+                            );
+                          },
+                        ),
                         SizedBox(height: 5),
                         Divider(),
                         Row(
@@ -759,6 +767,8 @@ class _RincianReservasiState extends State<RincianReservasi> {
               child: GestureDetector(
                 onTap: () async {
                   if (isStep3) {
+                    myAuth.dataPenyakitReservasi = [];
+                    selectedDiagnoses = {};
                     await myAuth.getPenyakitDariObatByIdSpesialis(
                         myAuth.Reservasi['id_spesialis']);
                     await myAuth.setStatusReservasiById(
@@ -766,9 +776,29 @@ class _RincianReservasiState extends State<RincianReservasi> {
                     _showLoadingScreen(); // Show loading screen before advancing to step 4
                   } else if (isStep4 && selectedDiagnoses.isNotEmpty) {
                     myAuth.setStatusReservasiById(myAuth.Reservasi['id'], 4);
+                    totalMedicinePrice = 0;
                     List<int> listDiagnosa = selectedDiagnoses.toList();
+                    myAuth.dataObatReservasi = [];
+                    myAuth.tempDataObat = {};
                     for (var i = 0; i < listDiagnosa.length; i++) {
                       await myAuth.getObatByIdPenyakit(listDiagnosa[i]);
+                    }
+
+                    Set<String> namaObat = {};
+                    Set<Map<String, dynamic>> obatUnik = {};
+
+                    for (var item in myAuth.tempDataObat) {
+                      if (!namaObat.contains(item['nama'])) {
+                        namaObat.add(item['nama']);
+                        obatUnik.add(item);
+                      }
+                    }
+
+                    myAuth.dataObatReservasi = obatUnik.toList();
+
+                    for (var i = 0; i < myAuth.dataObatReservasi.length; i++) {
+                      totalMedicinePrice +=
+                          myAuth.dataObatReservasi[i]['harga'];
                     }
                     // Perform action after selecting diagnosis
                     print('Diagnoses selected: $selectedDiagnoses');

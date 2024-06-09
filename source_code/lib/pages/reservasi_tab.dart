@@ -195,6 +195,8 @@ class _IsiBodyState extends State<IsiBody> {
                       EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
                   child: GestureDetector(
                     onTap: () async {
+                      print("main");
+                      print(reserve);
                       await context
                           .read<AuthCubit>()
                           .getReservasiById(reserve['id'], profil, reserve['id_spesialis']);

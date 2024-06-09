@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/reservasi.dart';
 
 void main() {
@@ -15,6 +18,7 @@ class RekamMedis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('id_ID', null);
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
@@ -49,21 +53,88 @@ class RekamMedis extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFC1F4FF), Color(0xFFFFFFFF)],
-          ),
+      body: IsiRekamMedis(screenWidth: screenWidth),
+    );
+  }
+}
+
+class IsiRekamMedis extends StatefulWidget {
+  const IsiRekamMedis({
+    super.key,
+    required this.screenWidth,
+  });
+
+  final double screenWidth;
+
+  @override
+  State<IsiRekamMedis> createState() => _IsiRekamMedisState();
+}
+
+class _IsiRekamMedisState extends State<IsiRekamMedis> {
+  bool profil = true;
+  bool profillain = false;
+  @override
+  Widget build(BuildContext context) {
+    AuthCubit myAuth = context.read<AuthCubit>();
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFFC1F4FF), Color(0xFFFFFFFF)],
         ),
-        child: ListView(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-              child: Row(
-                children: [
-                  Container(
+      ),
+      child: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+            child: Row(
+              children: [
+                Container(
+                  width: 130,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        18), // Untuk membuat sudut melengkung
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5), // Warna bayangan
+                        spreadRadius: 3, // Radius penyebaran bayangan
+                        blurRadius: 3, // Radius blur bayangan
+                        offset: Offset(2, 2), // Posisi bayangan (x, y)
+                      ),
+                    ],
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      // Fungsi yang akan dijalankan saat tombol ditekan
+                      setState(() {
+                        // Fungsi yang akan dijalankan saat tombol ditekan
+                        profillain = false;
+                        profil = true;
+                      });
+                    },
+                    clipBehavior: Clip.none,
+                    child: Text(
+                      'SAYA SENDIRI',
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: profil ? Colors.black : Colors.grey,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      )),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Container(
                     width: 130,
                     height: 40,
                     decoration: BoxDecoration(
@@ -74,20 +145,25 @@ class RekamMedis extends StatelessWidget {
                           color: Colors.grey.withOpacity(0.5), // Warna bayangan
                           spreadRadius: 3, // Radius penyebaran bayangan
                           blurRadius: 3, // Radius blur bayangan
-                          offset: Offset(2, 2), // Posisi bayangan (x, y)
+                          offset: Offset(2, 3), // Posisi bayangan (x, y)
                         ),
                       ],
                     ),
                     child: TextButton(
                       onPressed: () {
                         // Fungsi yang akan dijalankan saat tombol ditekan
+                        setState(() {
+                          // Fungsi yang akan dijalankan saat tombol ditekan
+                          profillain = true;
+                          profil = false;
+                        });
                       },
                       clipBehavior: Clip.none,
                       child: Text(
-                        'SAYA SENDIRI',
+                        'ORANG LAIN',
                         style: TextStyle(
                             fontSize: 16.0,
-                            color: Colors.black,
+                            color: profillain ? Colors.black : Colors.grey,
                             fontWeight: FontWeight.bold),
                       ),
                       style: ButtonStyle(
@@ -100,158 +176,117 @@ class RekamMedis extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Container(
-                      width: 130,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                            18), // Untuk membuat sudut melengkung
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                Colors.grey.withOpacity(0.5), // Warna bayangan
-                            spreadRadius: 3, // Radius penyebaran bayangan
-                            blurRadius: 3, // Radius blur bayangan
-                            offset: Offset(2, 3), // Posisi bayangan (x, y)
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 7,
+                        offset: Offset(0, 2),
+                      )
+                    ]),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(300),
+                            child: Image.asset(
+                              "assets/icon/person1.jpg",
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Nama",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                              Text(
+                                "Tanggal",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                              Text(
+                                "Nama Dokter",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ": Rifky Afandi",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                              Text(
+                                ": 29 Februari 1996",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                              Text(
+                                ": Dr Legi Kustiah",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      child: TextButton(
-                        onPressed: () {
-                          // Fungsi yang akan dijalankan saat tombol ditekan
-                        },
-                        clipBehavior: Clip.none,
-                        child: Text(
-                          'ORANG LAIN',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                              RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(13),
-                          )),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                        ),
+                      Divider(),
+                      Text(
+                        "Penyakit : Demam Tinggi",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
                       ),
-                    ),
+                      Text(
+                        "Obat        : Panadol",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                      Text(
+                        "Tindakan : Rawat Jalan",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 7,
-                          offset: Offset(0, 2),
-                        )
-                      ]),
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(300),
-                              child: Image.asset(
-                                "assets/icon/person1.jpg",
-                                width: screenWidth * 0.18,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(
-                              width: screenWidth * 0.03,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Nama",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.03),
-                                ),
-                                Text(
-                                  "Tanggal",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.03),
-                                ),
-                                Text(
-                                  "Nama Dokter",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.03),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: screenWidth * 0.03,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ": Rifky Afandi",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.03),
-                                ),
-                                Text(
-                                  ": 29 Februari 1996",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.03),
-                                ),
-                                Text(
-                                  ": Dr Legi Kustiah",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.03),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Text(
-                          "Penyakit : Demam Tinggi",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.03),
-                        ),
-                        Text(
-                          "Obat        : Panadol",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.03),
-                        ),
-                        Text(
-                          "Tindakan : Rawat Jalan",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.03),
-                        ),
-                      ],
-                    ),
-                  )),
-            ),
-          ],
-        ),
+                )),
+          ),
+        ],
       ),
     );
   }

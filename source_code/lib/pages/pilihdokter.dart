@@ -264,45 +264,6 @@ class PilihDokter extends StatelessWidget {
                                 );
                               },
                             ),
-                            // Row(
-                            //   children: [
-                            //     Expanded(
-                            //       child: Column(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           Text(
-                            //             "Senin",
-                            //             style: GoogleFonts.poppins(),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //     Expanded(
-                            //       child: Column(
-                            //         crossAxisAlignment: CrossAxisAlignment.end,
-                            //         children: [
-                            //           Text(
-                            //             "12.30 - 14.00",
-                            //             style: GoogleFonts.poppins(),
-                            //           ),
-                            //           Text(
-                            //             "14.30 - 15.00",
-                            //             style: GoogleFonts.poppins(),
-                            //           ),
-                            //           Text(
-                            //             "15.30 - 16.00",
-                            //             style: GoogleFonts.poppins(),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            // Container(
-                            //   color: Colors.black,
-                            //   height: 1,
-                            // ),
                           ],
                         ),
                       ),

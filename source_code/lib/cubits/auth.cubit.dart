@@ -24,6 +24,9 @@ class AuthCubit extends Cubit<AuthModel> {
   List<Map<String, dynamic>> dataBlokJadwal = [];
   List<Map<String, dynamic>> dataPenyakitReservasi = [];
   List<Map<String, dynamic>> dataObatReservasi = [];
+  List<Map<String, dynamic>> dataRekamMedis = [];
+
+  Set<Map<String, dynamic>> tempDataObat = {};
 
   void setFromJson(Map<String, dynamic> json) {
     int userID = json['user_id'];
@@ -248,7 +251,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Melakukan get data jam yang ada dalam db
   Future<void> getjam() async {
     final response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/jam/?skip=0&limit=10'),
+      Uri.parse('http://127.0.0.1:8000/jam/'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${state.accessToken}',
@@ -462,7 +465,9 @@ class AuthCubit extends Cubit<AuthModel> {
   
    */
 
-  Future<void> getReservasiById(int idReservasi, bool isProfil, int idSpesialis) async {
+  Future<void> getReservasiById(
+      int idReservasi, bool isProfil, int idSpesialis) async {
+    print("nopal");
     final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/reservasi/$idReservasi'),
         headers: {
@@ -473,6 +478,8 @@ class AuthCubit extends Cubit<AuthModel> {
       Reservasi = {};
       var body = jsonDecode(response.body);
 
+      print("puas");
+
       DateTime date = DateTime.parse(body['tanggal']);
       var tempJam = await getJamKerjaDokterById(body['id_jam_kerja_dokter']);
       var nama =
@@ -480,8 +487,10 @@ class AuthCubit extends Cubit<AuthModel> {
       var tempNama;
 
       if (isProfil) {
+        print("usap");
         tempNama = dataProfil;
       } else {
+        print("asup");
         tempNama = await getProfilLainById(nama['id_profil_lain']);
       }
 
@@ -625,6 +634,7 @@ class AuthCubit extends Cubit<AuthModel> {
         var temp = await getJamKerjaDokterById(hasil[i]['id_jam_kerja_dokter']);
         hasil[i]['dokter'] = temp['dokter'];
         hasil[i]['spesialis'] = temp['spesialis'];
+        hasil[i]['id_spesialis'] = temp['id_spesialis'];
         hasil[i]['jam_awal'] = temp['jam_awal'].substring(0, 5);
         hasil[i]['jam_akhir'] = temp['jam_akhir'].substring(0, 5);
         var nama = await getProfilLainById(idx);
@@ -692,6 +702,31 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
+  Future<void> postDaftarPenyakitProfil(
+      int idDaftarProfil, int idPenyakit, int idReservasi) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/daftar_profil_penyakit/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${state.accessToken}',
+      },
+      body: jsonEncode(
+        {
+          "id_daftar_profil": idDaftarProfil,
+          "id_penyakit": idPenyakit,
+          "status": 1,
+          "id_reservasi": idReservasi,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      var DaftarProfilPenyakit = jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to post daftar profil penyakit');
+    }
+  }
+
   Future<void> getProfilLain(int idUser) async {
     final response = await http
         .get(Uri.parse('http://127.0.0.1:8000/profil_lain/$idUser'), headers: {
@@ -753,18 +788,35 @@ class AuthCubit extends Cubit<AuthModel> {
   }
 
   Future<void> getObatByIdPenyakit(int idPenyakit) async {
-    final response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/obat_by_penyakit/$idPenyakit'), headers: {
-      'Authorization': 'Bearer ${state.accessToken}',
-    });
+    final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/obat_by_penyakit/$idPenyakit'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
       List<Map<String, dynamic>> hasil =
           body.map((dynamic item) => item as Map<String, dynamic>).toList();
-      dataObatReservasi.addAll(hasil);
+      tempDataObat.addAll(hasil);
     } else {
       throw Exception('Failed to load penyakit');
     }
+  }
+
+  Future<void> tambahProfilLain(int userID, String nama, String jenisKelamin,
+      String tanggalLahir, String foto) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/profil_lain/$userID'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        "nama": nama,
+        "jenis_kelamin": jenisKelamin,
+        "tanggal_lahir": tanggalLahir,
+        "foto": foto
+      }),
+    );
   }
 }

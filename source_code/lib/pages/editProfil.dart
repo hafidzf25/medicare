@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
-import 'package:source_code/pages/profilPasien.dart';
 
 class EditProfil extends StatefulWidget {
   const EditProfil({Key? key}) : super(key: key);
@@ -25,12 +24,14 @@ class _EditProfilState extends State<EditProfil> {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
 
+  late AuthCubit myAuth; // Declare myAuth variable
+
   @override
   void initState() {
     super.initState();
     _imagePicker = ImagePicker();
+    myAuth = BlocProvider.of<AuthCubit>(context); // Initialize myAuth
     // Initialize text field controllers with existing data
-    AuthCubit myAuth = context.read<AuthCubit>();
     _nameController.text = "${myAuth.dataProfil['nama']}";
     _dobController.text = "${myAuth.dataProfil['tanggal_lahir']}";
     _phoneController.text = "${myAuth.dataProfil['notelp']}";
@@ -61,6 +62,26 @@ class _EditProfilState extends State<EditProfil> {
             .toString()
             .split(' ')[0]; // Update the date controller without time
       });
+    }
+  }
+
+  _onSaveButtonPressed() async {
+    if (_formKey.currentState!.validate()) {
+      final profilData = {
+        'nama': _nameController.text,
+        'jenis_kelamin': myAuth.dataProfil['jenis_kelamin'],
+        'notelp': _phoneController.text,
+        'tanggal_lahir': _dobController.text,
+        'foto': _imageFile != null
+            ? base64Encode(_imageFile!)
+            : myAuth.dataProfil['foto'],
+      };
+      await myAuth.updateProfil(myAuth.state.userID, profilData);
+      setState(() {
+        _isEditing = false;
+      });
+      // Kembali ke halaman profilPasien
+      Navigator.pop(context, profilData); 
     }
   }
 
@@ -169,36 +190,10 @@ class _EditProfilState extends State<EditProfil> {
                     SizedBox(height: 30),
                     _isEditing
                         ? ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                final profilData = {
-                                  'nama': _nameController.text,
-                                  'jenis_kelamin':
-                                      myAuth.dataProfil['jenis_kelamin'],
-                                  'notelp': _phoneController.text,
-                                  'tanggal_lahir': _dobController.text,
-                                  'foto': _imageFile != null
-                                      ? base64Encode(_imageFile!)
-                                      : myAuth.dataProfil['foto'],
-                                };
-                                await myAuth.updateProfil(
-                                    myAuth.state.userID, profilData);
-                                setState(() {
-                                  _isEditing = false;
-                                });
-                              }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProfilPasien(),
-                                ),
-                              );
-                            },
+                            onPressed: _onSaveButtonPressed,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.green, // Change button color to green
-                              minimumSize: Size(double.infinity / 2,
-                                  50), // Set button width to maximum with height 50
+                              backgroundColor: Colors.green,
+                              minimumSize: Size(double.infinity / 2, 50),
                             ),
                             child: Text('Save',
                                 style: TextStyle(color: Colors.white)),
@@ -211,10 +206,8 @@ class _EditProfilState extends State<EditProfil> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.green, // Change button color to green
-                              minimumSize: Size(double.infinity / 2,
-                                  50), // Set button width to maximum with height 50
+                              backgroundColor: Colors.green,
+                              minimumSize: Size(double.infinity / 2, 50),
                             ),
                             child: Text('Edit',
                                 style: TextStyle(color: Colors.white)),
