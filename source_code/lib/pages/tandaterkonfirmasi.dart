@@ -22,6 +22,9 @@ void main() async {
 class Terkonfirmasi extends StatelessWidget {
   Terkonfirmasi();
 
+  // Initialize the ValueNotifier here
+  final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(1);
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -175,10 +178,11 @@ class Terkonfirmasi extends StatelessWidget {
                 // Konfirmasi button
                 GreenButton(
                   onTap: () {
+                    bottomNavIndex.value = 1; // Indeks untuk ReservasiTab
                     // Action to perform when button is pressed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ReservasiTab()),
+                      MaterialPageRoute(builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
                     );
                   },
                   text: 'LIHAT JANJI TEMU',
@@ -190,9 +194,10 @@ class Terkonfirmasi extends StatelessWidget {
                         20), // Menambahkan jarak antara button sebelumnya dan button "Kembali ke Home"
                 GreenButton(
                   onTap: () {
+                    bottomNavIndex.value = 0; // Indeks untuk ReservasiTab
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                      MaterialPageRoute(builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
                     );
                   },
                   text: 'KEMBALI KE HOME',

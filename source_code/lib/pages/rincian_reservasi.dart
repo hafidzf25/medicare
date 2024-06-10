@@ -30,6 +30,9 @@ class _RincianReservasiState extends State<RincianReservasi> {
   Set<int> selectedDiagnoses = {};
   double totalMedicinePrice = 0;
 
+  // Initialize the ValueNotifier here
+  final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(1);
+
   @override
   void initState() {
     super.initState();
@@ -180,9 +183,11 @@ class _RincianReservasiState extends State<RincianReservasi> {
                   print('lewat 3');
                   // await context.read<AuthCubit>().getReservasiDoneByDaftarProfil(
                   //     context.read<AuthCubit>().dataProfil['id_daftar_profil']);
+
+                  bottomNavIndex.value = 1; // Indeks untuk ReservasiTab
                   await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                    MaterialPageRoute(builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
                   );
                 } else {
                   var Reservasi = context.read<AuthCubit>().Reservasi;
@@ -233,9 +238,10 @@ Future<void> _cancelReservation() async {
   await myAuth.deleteReservasi(myAuth.Reservasi['id']);
   await myAuth.getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
   await myAuth.getReservasiDoneByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+  bottomNavIndex.value = 1; // Indeks untuk ReservasiTab
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => ReservasiTab()),
+    MaterialPageRoute(builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
     (Route<dynamic> route) => false,
   );
 }

@@ -15,10 +15,13 @@ void main() {
 }
 
 class Reservasi extends StatelessWidget {
-  const Reservasi(
+  Reservasi(
       {super.key, this.spesialis = 'Pilih Spesialis', this.id_spesialis = 0});
   final String spesialis;
   final int id_spesialis;
+
+  // Initialize the ValueNotifier here
+  final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +41,11 @@ class Reservasi extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
+                    bottomNavIndex.value = 0; // Indeks untuk ReservasiTab
                     // Kembali ke halaman sebelumnya
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                      MaterialPageRoute(builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
                     );
                   },
                   child: Image.asset(
