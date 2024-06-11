@@ -2,10 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:source_code/main.dart';
-import 'package:source_code/pages/info_obat.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
-import 'package:source_code/pages/landingPage.dart';
-import 'package:source_code/pages/reservasi.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -15,9 +12,10 @@ void main() {
 }
 
 class RincianReservasi extends StatefulWidget {
-  RincianReservasi({super.key, this.status = 0});
+  RincianReservasi({super.key, this.status = 0, this.idDaftarProfil = 0});
 
   int status;
+  int idDaftarProfil;
 
   @override
   _RincianReservasiState createState() => _RincianReservasiState();
@@ -165,24 +163,20 @@ class _RincianReservasiState extends State<RincianReservasi> {
               onPressed: () async {
                 AuthCubit myAuth = context.read<AuthCubit>();
                 var Reservasi = context.read<AuthCubit>().Reservasi;
-                Navigator.of(context).pop();
+                print(Reservasi);
 
                 if (currentStep == 4) {
                   await context.read<AuthCubit>().setStatusReservasiById(
                       context.read<AuthCubit>().Reservasi['id'], 5);
-                  print('lewat 1');
-                  await myAuth.getReservasiByDaftarProfil(
-                      myAuth.dataProfil['id_daftar_profil']);
-                  print('lewat 2');
-                  await myAuth.getReservasiDoneByDaftarProfil(
-                      myAuth.dataProfil['id_daftar_profil']);
-                  print('lewat 3');
-                  // await context.read<AuthCubit>().getReservasiDoneByDaftarProfil(
-                  //     context.read<AuthCubit>().dataProfil['id_daftar_profil']);
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
-                  );
+                  await myAuth
+                      .getReservasiByDaftarProfil(widget.idDaftarProfil);
+                  await myAuth
+                      .getReservasiDoneByDaftarProfil(widget.idDaftarProfil);
+                  await Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return MyHomePage();
+                    },
+                  ));
                 } else {
                   var Reservasi = context.read<AuthCubit>().Reservasi;
                   context
@@ -201,7 +195,6 @@ class _RincianReservasiState extends State<RincianReservasi> {
   }
 
   void _showLoadingScreen() {
-    print(context.read<AuthCubit>().dataPenyakitReservasi);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -800,9 +793,18 @@ class _RincianReservasiState extends State<RincianReservasi> {
                       totalMedicinePrice +=
                           myAuth.dataObatReservasi[i]['harga'];
                     }
+
+                    for (var i = 0;
+                        i < myAuth.dataPenyakitReservasi.length;
+                        i++) {
+                      await myAuth.postDaftarPenyakitProfil(
+                          widget.idDaftarProfil,
+                          myAuth.dataPenyakitReservasi[i]['id'],
+                          myAuth.Reservasi['id']);
+                      print(i);
+                    }
+
                     // Perform action after selecting diagnosis
-                    print('Diagnoses selected: $selectedDiagnoses');
-                    print(myAuth.dataObatReservasi);
                     // Advance to the next screen or perform any other action
                     _advanceStep(4);
                   }

@@ -22,6 +22,7 @@ class AuthCubit extends Cubit<AuthModel> {
   List<Map<String, dynamic>> dataReservasi = [];
   List<Map<String, dynamic>> dataReservasiLain = [];
   List<Map<String, dynamic>> dataBlokJadwal = [];
+  List<Map<String, dynamic>> dataDiagnosaReservasi = [];
   List<Map<String, dynamic>> dataPenyakitReservasi = [];
   List<Map<String, dynamic>> dataObatReservasi = [];
   List<Map<String, dynamic>> dataRekamMedis = [];
@@ -65,7 +66,7 @@ class AuthCubit extends Cubit<AuthModel> {
       await getProfilLain(state.userID);
       await getReservasiByDaftarProfil(dataProfil['id_daftar_profil']);
       await getReservasiDoneByDaftarProfil(dataProfil['id_daftar_profil']);
-      print(dataReservasi);
+      await getRekamMedisByDaftarProfil(dataProfil['id_daftar_profil']);
     } else {
       emit(AuthModel(
           userID: 0, accessToken: "", error: "Email atau password salah"));
@@ -478,8 +479,6 @@ class AuthCubit extends Cubit<AuthModel> {
       Reservasi = {};
       var body = jsonDecode(response.body);
 
-      print("puas");
-
       DateTime date = DateTime.parse(body['tanggal']);
       var tempJam = await getJamKerjaDokterById(body['id_jam_kerja_dokter']);
       var nama =
@@ -487,10 +486,8 @@ class AuthCubit extends Cubit<AuthModel> {
       var tempNama;
 
       if (isProfil) {
-        print("usap");
         tempNama = dataProfil;
       } else {
-        print("asup");
         tempNama = await getProfilLainById(nama['id_profil_lain']);
       }
 
@@ -503,7 +500,6 @@ class AuthCubit extends Cubit<AuthModel> {
       Reservasi['status'] = body['status'];
       Reservasi['id_spesialis'] = idSpesialis;
 
-      print(Reservasi);
     } else if (response.statusCode == 404) {
     } else {
       throw Exception('Failed to load reservasi');
@@ -526,9 +522,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
-      print(body);
       Reservasi['status'] = body['status'];
-      print(Reservasi);
     } else if (response.statusCode == 404) {
     } else {
       throw Exception('Failed to load reservasi');
@@ -613,6 +607,41 @@ class AuthCubit extends Cubit<AuthModel> {
       }
     } else {
       throw Exception('Failed to load history reservasi');
+    }
+  }
+
+  Future<void> getRekamMedisByDaftarProfil(int idDaftarProfil) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/status_done/$idDaftarProfil'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataRekamMedis = hasil;
+      print(dataRekamMedis);
+      for (var i = 0; i < dataRekamMedis.length; i++) {
+        var temp = await getJamKerjaDokterById(
+            dataRekamMedis[i]['id_jam_kerja_dokter']);
+        dataRekamMedis[i]['dokter'] = temp['dokter'];
+        dataRekamMedis[i]['nama'] = dataProfil['nama'];
+        dataRekamMedis[i]['tanggal_lahir'] = dataProfil['tanggal_lahir'];
+        dataRekamMedis[i]['foto'] = dataProfil['foto'];
+        var tempPenyakit = await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
+
+        // Mengambil semua nilai `id_penyakit` dari setiap elemen dalam data
+        List<String> daftarPenyakit = tempPenyakit.map((item) => item['penyakit'] as String).toList();
+
+        // Menggabungkan nilai-nilai tersebut menjadi satu string yang dipisahkan oleh koma
+        String printPenyakit = daftarPenyakit.join(', ');
+        dataRekamMedis[i]['penyakit'] = printPenyakit;
+      }
+    } else {
+      throw Exception('Failed to load rekam medis');
     }
   }
 
@@ -781,7 +810,6 @@ class AuthCubit extends Cubit<AuthModel> {
       for (var i = 0; i < idPenyakitList.length; i++) {
         dataPenyakitReservasi.add(await getPenyakitById(idPenyakitList[i]));
       }
-      print(dataPenyakitReservasi);
     } else {
       throw Exception('Failed to load penyakit');
     }
@@ -801,6 +829,44 @@ class AuthCubit extends Cubit<AuthModel> {
       tempDataObat.addAll(hasil);
     } else {
       throw Exception('Failed to load penyakit');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getDaftarProfilPenyakitByReservasi(int idReservasi) async {
+    final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/daftar_profil_penyakit/$idReservasi'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      for (var i = 0; i < hasil.length; i++) {
+        var penyakit = await getPenyakitById(hasil[i]['id_penyakit']);
+        hasil[i]['penyakit'] = penyakit['nama'];
+      }
+      return hasil;
+    } else {
+      throw Exception('Failed to load daftar profil penyakit');
+    }
+  }
+
+  Future<void> getDiagnosaPenyakitByReservasi(int idReservasi) async {
+    final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/daftar_profil_penyakit/$idReservasi'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataDiagnosaReservasi.addAll(hasil);
+    } else {
+      throw Exception('Failed to load diagnosa');
     }
   }
 

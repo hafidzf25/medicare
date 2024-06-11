@@ -197,13 +197,45 @@ class _IsiBodyState extends State<IsiBody> {
                     onTap: () async {
                       print("main");
                       print(reserve);
-                      await context
-                          .read<AuthCubit>()
-                          .getReservasiById(reserve['id'], profil, reserve['id_spesialis']);
+                      AuthCubit myAuth = context.read<AuthCubit>();
+                      await context.read<AuthCubit>().getReservasiById(
+                          reserve['id'], profil, reserve['id_spesialis']);
+                      if (reserve['status'] == 3) {
+                        await myAuth.getPenyakitDariObatByIdSpesialis(
+                            reserve['id_spesialis']);
+                      } else if (reserve['status'] == 4) {
+                        myAuth.dataObatReservasi = [];
+                        myAuth.tempDataObat = {};
+                        myAuth.dataDiagnosaReservasi = [];
+                        await myAuth
+                            .getDiagnosaPenyakitByReservasi(reserve['id']);
+                        for (var i = 0;
+                            i < myAuth.dataDiagnosaReservasi.length;
+                            i++) {
+                          await myAuth.getObatByIdPenyakit(
+                              myAuth.dataDiagnosaReservasi[i]['id_penyakit']);
+                        }
+
+                        Set<String> namaObat = {};
+                        Set<Map<String, dynamic>> obatUnik = {};
+
+                        for (var item in myAuth.tempDataObat) {
+                          if (!namaObat.contains(item['nama'])) {
+                            namaObat.add(item['nama']);
+                            obatUnik.add(item);
+                          }
+                        }
+
+                        myAuth.dataObatReservasi = obatUnik.toList();
+                      }
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RincianReservasi(status: reserve['status'])),
+                          builder: (context) => RincianReservasi(
+                            status: reserve['status'],
+                            idDaftarProfil: reserve['id_daftar_profil'],
+                          ),
+                        ),
                       );
                     },
                     child: Container(
