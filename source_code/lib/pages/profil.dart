@@ -65,7 +65,20 @@ class _ProfilState extends State<Profil> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                   
+                    CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Color(0xFFD9D9D9),
+                      backgroundImage: foto != null && foto.isNotEmpty
+                          ? AssetImage("assets/images/$foto")
+                          : null,
+                      child: foto == null || foto.isEmpty
+                          ? const Icon(
+                              Icons.person,
+                              size: 55, // Sesuaikan ukuran sesuai kebutuhan
+                              color: Colors.black,
+                            )
+                          : null,
+                    ),
                     const SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -219,7 +219,22 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                         children: [
                           Row(
                             children: [
-                              
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Color(
+                                      0xFFD9D9D9), // Gray background color
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 55, // Adjust the size as needed
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
                               SizedBox(
                                 width: 15,
                               ),
@@ -289,7 +304,8 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                                 flex: 2,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       "Penyakit",
