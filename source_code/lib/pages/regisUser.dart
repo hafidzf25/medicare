@@ -104,6 +104,11 @@ class _RegisUserState extends State<RegisUser> {
                         if (value!.isEmpty) {
                           return 'Email harus diisi';
                         }
+                        // Regex to validate email format
+                        final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Format email tidak valid';
+                        }
                         return null;
                       },
                     ),

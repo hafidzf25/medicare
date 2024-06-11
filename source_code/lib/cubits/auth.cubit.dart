@@ -1191,11 +1191,11 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
-  Future<void> tambahProfilLain(int userID, String nama, String jenisKelamin,
-      String tanggalLahir, String foto) async {
+  Future<void> tambahProfilLain(int userID, String nama, String jenisKelamin, String tanggalLahir, String foto) async {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/profil_lain/$userID'),
       headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
@@ -1205,11 +1205,21 @@ class AuthCubit extends Cubit<AuthModel> {
         "foto": foto
       }),
     );
+
+    if (response.statusCode == 200) {
+        // Jika server mengembalikan respons OK
+        print('Profil berhasil ditambahkan.');
+    } else {
+        // Jika server mengembalikan respons selain 200
+        print('Gagal menambahkan profil: ${response.statusCode}');
+        print('Response body: ${response.body}');
+    }
   }
+
 
   Future<void> deleteReservasi(int reservasiId) async {
     final response = await http.delete(
-      Uri.parse('http://127.0.0.1:8000/reservasi_delete/$reservasiId'),
+      Uri.parse('http://127.0.0.1:8000/reservasi/delete/$reservasiId'),
       headers: {
         'Authorization': 'Bearer ${state.accessToken}',
         'Content-Type': 'application/json',
@@ -1233,4 +1243,43 @@ class AuthCubit extends Cubit<AuthModel> {
           error: "Gagal menghapus reservasi"));
     }
   }
+
+
+  Future<void> deleteProfilLainById(int idProfilLain, String accessToken) async {
+  try {
+    final response = await http.delete(
+      Uri.parse('http://127.0.0.1:8000/profil_lain/$idProfilLain'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      dataReservasi.removeWhere((profilLain) => profilLain['id'] == idProfilLain);
+      emit(AuthModel(
+        userID: state.userID, 
+        accessToken: state.accessToken, 
+        error: ""
+      ));
+      print('Profile deleted successfully.');
+    } else if (response.statusCode == 404) {
+      emit(AuthModel(
+        userID: state.userID,
+        accessToken: state.accessToken,
+        error: "Profil tidak ditemukan"
+      ));
+      print('Profile not found.');
+    } else {
+      // Handle other errors
+      print('Failed to delete profile.');
+    }
+  } catch (e) {
+    // Handle exceptions
+    print('Error deleting profile: $e');
+  }
+  
+  
+  }
+  
 }
