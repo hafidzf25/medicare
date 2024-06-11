@@ -333,12 +333,6 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
   }
 
   @override
-  Future<void> ambilTanggalBlocked() async {
-    String tanggal = widget.selectedDate.toIso8601String().split('T')[0];
-    await context.read<AuthCubit>().getReservasiByTanggal(tanggal);
-  }
-
-  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     AuthCubit myAuth = context.read<AuthCubit>();
@@ -356,13 +350,11 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
     initializeDateFormatting('id_ID', locale);
 
     myAuth.getReservasiByTanggal(tanggal);
-    print(myAuth.dataBlokJadwal);
     List<Map<String, dynamic>> BlokJadwal = myAuth.dataBlokJadwal
         .where((reservasi) => reservasi['tanggal'] == tanggal)
         .toList();
+    
     print(BlokJadwal);
-    print(hasil);
-    // print("\n");
 
     // Buat List baru untuk menyimpan elemen hasil yang id-nya tidak ada di BlokJadwal pada key id_jam_kerja_dokter
     List<Map<String, dynamic>> newHasil = hasil
@@ -370,7 +362,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
             (blokItem) => hasilItem['id'] == blokItem['id_jam_kerja_dokter']))
         .toList();
 
-    // print(newHasil);
+    print(newHasil);
 
     return Scaffold(
       backgroundColor: Colors.transparent,

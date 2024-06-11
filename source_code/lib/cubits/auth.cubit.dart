@@ -26,6 +26,8 @@ class AuthCubit extends Cubit<AuthModel> {
   List<Map<String, dynamic>> dataPenyakitReservasi = [];
   List<Map<String, dynamic>> dataObatReservasi = [];
   List<Map<String, dynamic>> dataRekamMedis = [];
+  List<Map<String, dynamic>> dataObatProfil = [];
+  List<Map<String, dynamic>> dataAkhirObat = [];
 
   Set<Map<String, dynamic>> tempDataObat = {};
 
@@ -69,6 +71,11 @@ class AuthCubit extends Cubit<AuthModel> {
       await getReservasiByDaftarProfil(dataProfil['id_daftar_profil']);
       await getReservasiDoneByDaftarProfil(dataProfil['id_daftar_profil']);
       await getRekamMedisByDaftarProfil(dataProfil['id_daftar_profil']);
+      await getObatByIdDaftarProfil(dataProfil['id_daftar_profil']);
+      for (var i = 0; i < dataProfilLain.length; i++) {
+        await getObatByIdDaftarProfilLain(
+            dataProfilLain[i]['id_daftar_profil'], dataProfilLain[i]['id']);
+      }
     } else {
       emit(AuthModel(
           userID: 0, accessToken: "", error: "Email atau password salah"));
@@ -274,8 +281,8 @@ class AuthCubit extends Cubit<AuthModel> {
 
   // Mengambil data jam berdasarkan id jam yang diminta
   Future<dynamic> getJamById(int idJam) async {
-    final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/jam/id_jam/$idJam'), headers: {
+    final response = await http
+        .get(Uri.parse('http://127.0.0.1:8000/jam/id_jam/$idJam'), headers: {
       'Authorization': 'Bearer ${state.accessToken}',
     });
 
@@ -381,7 +388,8 @@ class AuthCubit extends Cubit<AuthModel> {
   // Mengambil data daftar profil berdasarkan id profil lain yang diminta
   Future<dynamic> getDaftarProfilSiProfilLain(int idProfilLain) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/daftar_profil/id_profil_lain/$idProfilLain'),
+        Uri.parse(
+            'http://127.0.0.1:8000/daftar_profil/id_profil_lain/$idProfilLain'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -423,8 +431,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getdoktorbyspesialis(int idSpesialis) async {
     final response = await http.get(
-      Uri.parse(
-          'http://127.0.0.1:8000/dokter/spesialis/$idSpesialis'),
+      Uri.parse('http://127.0.0.1:8000/dokter/spesialis/$idSpesialis'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${state.accessToken}',
@@ -470,7 +477,6 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getReservasiById(
       int idReservasi, bool isProfil, int idSpesialis) async {
-    print("nopal");
     final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/reservasi/$idReservasi'),
         headers: {
@@ -501,7 +507,6 @@ class AuthCubit extends Cubit<AuthModel> {
       Reservasi['jam_akhir'] = tempJam['jam_akhir'].substring(0, 5);
       Reservasi['status'] = body['status'];
       Reservasi['id_spesialis'] = idSpesialis;
-
     } else if (response.statusCode == 404) {
     } else {
       throw Exception('Failed to load reservasi');
@@ -625,7 +630,6 @@ class AuthCubit extends Cubit<AuthModel> {
       List<Map<String, dynamic>> hasil =
           body.map((dynamic item) => item as Map<String, dynamic>).toList();
       dataRekamMedis = hasil;
-      print(dataRekamMedis);
       for (var i = 0; i < dataRekamMedis.length; i++) {
         var temp = await getJamKerjaDokterById(
             dataRekamMedis[i]['id_jam_kerja_dokter']);
@@ -633,14 +637,32 @@ class AuthCubit extends Cubit<AuthModel> {
         dataRekamMedis[i]['nama'] = dataProfil['nama'];
         dataRekamMedis[i]['tanggal_lahir'] = dataProfil['tanggal_lahir'];
         dataRekamMedis[i]['foto'] = dataProfil['foto'];
-        var tempPenyakit = await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
+        var tempPenyakit =
+            await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
 
         // Mengambil semua nilai `id_penyakit` dari setiap elemen dalam data
-        List<String> daftarPenyakit = tempPenyakit.map((item) => item['penyakit'] as String).toList();
+        List<String> daftarPenyakit =
+            tempPenyakit.map((item) => item['penyakit'] as String).toList();
 
         // Menggabungkan nilai-nilai tersebut menjadi satu string yang dipisahkan oleh koma
         String printPenyakit = daftarPenyakit.join(', ');
         dataRekamMedis[i]['penyakit'] = printPenyakit;
+
+        List<Map<String, dynamic>> daftarObat = [];
+
+        for (var i = 0; i < tempPenyakit.length; i++) {
+          tempDataObat = {};
+          var obat = await getObatByIdPenyakit(tempPenyakit[i]['id_penyakit']);
+          daftarObat = [...daftarObat, ...tempDataObat];
+        }
+
+        List<String> obatString =
+            daftarObat.map((item) => item['nama'] as String).toList();
+
+        obatString = obatString.toSet().toList();
+
+        String hasilobat = obatString.join(', ');
+        dataRekamMedis[i]['obat'] = hasilobat;
       }
     } else {
       throw Exception('Failed to load rekam medis');
@@ -706,7 +728,8 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
-  Future<void> getRekamMedisByDaftarProfilLain(int idDaftarProfil, int idx) async {
+  Future<void> getRekamMedisByDaftarProfilLain(
+      int idDaftarProfil, int idx) async {
     final response = await http.get(
         Uri.parse(
             'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
@@ -719,24 +742,230 @@ class AuthCubit extends Cubit<AuthModel> {
       List<Map<String, dynamic>> hasil =
           body.map((dynamic item) => item as Map<String, dynamic>).toList();
       dataRekamMedis = hasil;
-      print(dataRekamMedis);
       for (var i = 0; i < dataRekamMedis.length; i++) {
         var temp = await getJamKerjaDokterById(
             dataRekamMedis[i]['id_jam_kerja_dokter']);
         dataRekamMedis[i]['dokter'] = temp['dokter'];
-        var tempPenyakit = await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
-        
+        var tempPenyakit =
+            await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
+
         var nama = await getProfilLainById(idx);
         dataRekamMedis[i]['nama'] = nama['nama'];
         dataRekamMedis[i]['tanggal_lahir'] = nama['tanggal_lahir'];
         dataRekamMedis[i]['foto'] = nama['foto'];
 
         // Mengambil semua nilai `id_penyakit` dari setiap elemen dalam data
-        List<String> daftarPenyakit = tempPenyakit.map((item) => item['penyakit'] as String).toList();
+        List<String> daftarPenyakit =
+            tempPenyakit.map((item) => item['penyakit'] as String).toList();
 
         // Menggabungkan nilai-nilai tersebut menjadi satu string yang dipisahkan oleh koma
         String printPenyakit = daftarPenyakit.join(', ');
         dataRekamMedis[i]['penyakit'] = printPenyakit;
+
+        List<Map<String, dynamic>> daftarObat = [];
+
+        for (var i = 0; i < tempPenyakit.length; i++) {
+          tempDataObat = {};
+          var obat = await getObatByIdPenyakit(tempPenyakit[i]['id_penyakit']);
+          daftarObat = [...daftarObat, ...tempDataObat];
+        }
+
+        print(daftarObat);
+
+        // Mengambil nilai 'penyakit' dari setiap elemen dalam list yang digabungkan
+        List<String> obatString =
+            daftarObat.map((item) => item['nama'] as String).toList();
+
+        obatString = obatString.toSet().toList();
+
+        String hasilobat = obatString.join(', ');
+        dataRekamMedis[i]['obat'] = hasilobat;
+      }
+    } else {
+      throw Exception('Failed to load rekam medis');
+    }
+  }
+
+  Future<void> getObatByIdDaftarProfil(int idDaftarProfil) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      dataAkhirObat = [];
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataObatProfil = hasil;
+      var tempObat = tempDataObat;
+
+      for (var i = 0; i < dataObatProfil.length; i++) {
+        // print(dataObatProfil);
+        // print("\n");
+        dataObatProfil[i]['nama'] = dataProfil['nama'];
+
+        var tempDaftarPenyakit =
+            await getDaftarProfilPenyakitByReservasi(dataObatProfil[i]['id']);
+        // print(tempDaftarPenyakit);
+
+        for (var j = 0; j < tempDaftarPenyakit.length; j++) {
+          tempDataObat = {};
+          tempDaftarPenyakit[j]['max_hari'] = 0;
+          // print(tempDaftarPenyakit[j]);
+          var namaPenyakit =
+              await getPenyakitById(tempDaftarPenyakit[j]['id_penyakit']);
+          tempDaftarPenyakit[j]['nama_penyakit'] = namaPenyakit['nama'];
+          await getObatByIdPenyakit(tempDaftarPenyakit[j]['id_penyakit']);
+          var daftarObat = tempDataObat.toList();
+          // print(daftarObat);
+          for (var k = 0; k < daftarObat.length; k++) {
+            if (tempDaftarPenyakit[j]['max_hari'] < daftarObat[k]['durasi']) {
+              tempDaftarPenyakit[j]['max_hari'] = daftarObat[k]['durasi'];
+            }
+          }
+          // print("${tempDaftarPenyakit[j]['max_hari']}");
+        }
+
+        // Mengambil tanggal hari ini
+        DateTime now = DateTime.now();
+
+        // Mengonversi tanggal ke format yang diinginkan
+        String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+        // Membuat objek DateTime untuk kedua tanggal
+        DateTime date1 = DateTime.parse(dataObatProfil[i]['tanggal']);
+        DateTime date2 = DateTime.parse(formattedDate);
+
+        // Menghitung selisih antara kedua tanggal
+        Duration difference = date2.difference(date1);
+
+        // Mendapatkan selisih dalam hari
+        int differenceInDays = difference.inDays;
+
+        for (var j = 0; j < tempDaftarPenyakit.length; j++) {
+          if (differenceInDays >= tempDaftarPenyakit[j]['max_hari']) {
+            await setStatusDaftarProfilPenyakitById(
+                tempDaftarPenyakit[j]['id'], 0);
+          }
+        }
+      }
+      tempDataObat = tempObat;
+      for (var i = 0; i < dataObatProfil.length; i++) {
+        print(dataObatProfil);
+        print("\n");
+        dataObatProfil[i]['nama'] = dataProfil['nama'];
+
+        var tempDaftarPenyakit = await getDaftarProfilPenyakitAktifByReservasi(
+            dataObatProfil[i]['id']);
+        // print(tempDaftarPenyakit);
+
+        for (var j = 0; j < tempDaftarPenyakit.length; j++) {
+          tempDataObat = {};
+          print(tempDaftarPenyakit[j]);
+          var namaPenyakit =
+              await getPenyakitById(tempDaftarPenyakit[j]['id_penyakit']);
+          tempDaftarPenyakit[j]['nama_penyakit'] = namaPenyakit['nama'];
+          await getObatByIdPenyakit(tempDaftarPenyakit[j]['id_penyakit']);
+          var daftarObat = tempDataObat.toList();
+          for (var k = 0; k < daftarObat.length; k++) {
+            daftarObat[k]['nama_pasien'] = dataProfil['nama'];
+            daftarObat[k]['nama_penyakit'] =
+                tempDaftarPenyakit[j]['nama_penyakit'];
+          }
+          dataAkhirObat.addAll(daftarObat);
+        }
+      }
+    } else {
+      throw Exception('Failed to load rekam medis');
+    }
+  }
+
+  Future<void> getObatByIdDaftarProfilLain(int idDaftarProfil, int idx) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataObatProfil = hasil;
+      var tempObat = tempDataObat;
+
+      for (var i = 0; i < dataObatProfil.length; i++) {
+        var tempDaftarPenyakit =
+            await getDaftarProfilPenyakitByReservasi(dataObatProfil[i]['id']);
+        // print(tempDaftarPenyakit);
+
+        for (var j = 0; j < tempDaftarPenyakit.length; j++) {
+          tempDataObat = {};
+          tempDaftarPenyakit[j]['max_hari'] = 0;
+          // print(tempDaftarPenyakit[j]);
+          var namaPenyakit =
+              await getPenyakitById(tempDaftarPenyakit[j]['id_penyakit']);
+          tempDaftarPenyakit[j]['nama_penyakit'] = namaPenyakit['nama'];
+          await getObatByIdPenyakit(tempDaftarPenyakit[j]['id_penyakit']);
+          var daftarObat = tempDataObat.toList();
+          // print(daftarObat);
+          for (var k = 0; k < daftarObat.length; k++) {
+            if (tempDaftarPenyakit[j]['max_hari'] < daftarObat[k]['durasi']) {
+              tempDaftarPenyakit[j]['max_hari'] = daftarObat[k]['durasi'];
+            }
+          }
+          // print("${tempDaftarPenyakit[j]['max_hari']}");
+        }
+
+        // Mengambil tanggal hari ini
+        DateTime now = DateTime.now();
+
+        // Mengonversi tanggal ke format yang diinginkan
+        String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+
+        // Membuat objek DateTime untuk kedua tanggal
+        DateTime date1 = DateTime.parse(dataObatProfil[i]['tanggal']);
+        DateTime date2 = DateTime.parse(formattedDate);
+
+        // Menghitung selisih antara kedua tanggal
+        Duration difference = date2.difference(date1);
+
+        // Mendapatkan selisih dalam hari
+        int differenceInDays = difference.inDays;
+
+        for (var j = 0; j < tempDaftarPenyakit.length; j++) {
+          if (differenceInDays >= tempDaftarPenyakit[j]['max_hari']) {
+            await setStatusDaftarProfilPenyakitById(
+                tempDaftarPenyakit[j]['id'], 0);
+          }
+        }
+      }
+      tempDataObat = tempObat;
+      for (var i = 0; i < dataObatProfil.length; i++) {
+        var tempDaftarPenyakit = await getDaftarProfilPenyakitAktifByReservasi(
+            dataObatProfil[i]['id']);
+        // print(tempDaftarPenyakit);
+
+        for (var j = 0; j < tempDaftarPenyakit.length; j++) {
+          tempDataObat = {};
+          print(tempDaftarPenyakit[j]);
+          var namaPenyakit =
+              await getPenyakitById(tempDaftarPenyakit[j]['id_penyakit']);
+          tempDaftarPenyakit[j]['nama_penyakit'] = namaPenyakit['nama'];
+          await getObatByIdPenyakit(tempDaftarPenyakit[j]['id_penyakit']);
+          var daftarObat = tempDataObat.toList();
+          for (var k = 0; k < daftarObat.length; k++) {
+            var nama = await getProfilLainById(idx);
+            daftarObat[k]['nama_pasien'] = nama['nama'];
+            daftarObat[k]['nama_penyakit'] =
+                tempDaftarPenyakit[j]['nama_penyakit'];
+          }
+          dataAkhirObat.addAll(daftarObat);
+        }
       }
     } else {
       throw Exception('Failed to load rekam medis');
@@ -796,10 +1025,11 @@ class AuthCubit extends Cubit<AuthModel> {
   }
 
   Future<void> getProfilLain(int idUser) async {
-    final response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/profil_lain/id_user/$idUser'), headers: {
-      'Authorization': 'Bearer ${state.accessToken}',
-    });
+    final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/profil_lain/id_user/$idUser'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
@@ -831,10 +1061,11 @@ class AuthCubit extends Cubit<AuthModel> {
   }
 
   Future<void> getPenyakitDariObatByIdSpesialis(int idSpesialis) async {
-    final response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/obat/spesialis/$idSpesialis'), headers: {
-      'Authorization': 'Bearer ${state.accessToken}',
-    });
+    final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/obat/spesialis/$idSpesialis'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
@@ -871,7 +1102,8 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getDaftarProfilPenyakitByReservasi(int idReservasi) async {
+  Future<List<Map<String, dynamic>>> getDaftarProfilPenyakitByReservasi(
+      int idReservasi) async {
     final response = await http.get(
         Uri.parse('http://127.0.0.1:8000/daftar_profil_penyakit/$idReservasi'),
         headers: {
@@ -886,6 +1118,56 @@ class AuthCubit extends Cubit<AuthModel> {
         var penyakit = await getPenyakitById(hasil[i]['id_penyakit']);
         hasil[i]['penyakit'] = penyakit['nama'];
       }
+      return hasil;
+    } else {
+      throw Exception('Failed to load daftar profil penyakit');
+    }
+  }
+
+  Future<void> setStatusDaftarProfilPenyakitById(
+      int idDaftarProfilPenyakit, int status) async {
+    final response = await http.put(
+      Uri.parse(
+          'http://127.0.0.1:8000/daftar_profil_penyakit/edit_status/$idDaftarProfilPenyakit'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(
+        {
+          "status": status,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+    } else if (response.statusCode == 404) {
+    } else {
+      throw Exception('Failed to load reservasi');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getDaftarProfilPenyakitAktifByReservasi(
+      int idReservasi) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/daftar_profil_penyakit/aktif/$idReservasi'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      for (var i = 0; i < hasil.length; i++) {
+        var penyakit = await getPenyakitById(hasil[i]['id_penyakit']);
+        hasil[i]['penyakit'] = penyakit['nama'];
+      }
+      return hasil;
+    } else if (response.statusCode == 404) {
+      List<Map<String, dynamic>> hasil = [];
       return hasil;
     } else {
       throw Exception('Failed to load daftar profil penyakit');
@@ -925,7 +1207,6 @@ class AuthCubit extends Cubit<AuthModel> {
     );
   }
 
-
   Future<void> deleteReservasi(int reservasiId) async {
     final response = await http.delete(
       Uri.parse('http://127.0.0.1:8000/reservasi_delete/$reservasiId'),
@@ -939,24 +1220,17 @@ class AuthCubit extends Cubit<AuthModel> {
       // Menghapus reservasi dari local state jika diperlukan
       dataReservasi.removeWhere((reservasi) => reservasi['id'] == reservasiId);
       emit(AuthModel(
-        userID: state.userID, 
-        accessToken: state.accessToken, 
-        error: ""
-      ));
+          userID: state.userID, accessToken: state.accessToken, error: ""));
     } else if (response.statusCode == 404) {
       emit(AuthModel(
-        userID: state.userID,
-        accessToken: state.accessToken,
-        error: "Reservasi tidak ditemukan"
-      ));
+          userID: state.userID,
+          accessToken: state.accessToken,
+          error: "Reservasi tidak ditemukan"));
     } else {
       emit(AuthModel(
-        userID: state.userID,
-        accessToken: state.accessToken,
-        error: "Gagal menghapus reservasi"
-      ));
+          userID: state.userID,
+          accessToken: state.accessToken,
+          error: "Gagal menghapus reservasi"));
     }
   }
-
-  
 }

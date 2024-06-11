@@ -15,7 +15,8 @@ void main() {
 }
 
 class RincianReservasi extends StatefulWidget {
-  RincianReservasi({super.key, this.status = 0, this.idDaftarProfil = 0, this.total = 0});
+  RincianReservasi(
+      {super.key, this.status = 0, this.idDaftarProfil = 0, this.total = 0});
 
   int status;
   int idDaftarProfil;
@@ -163,7 +164,8 @@ class _RincianReservasiState extends State<RincianReservasi> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (currentStep == 0) Text('Biaya: Rp. 20.000'),
-              if (currentStep == 4) Text('Biaya: Rp. ${totalMedicinePrice/2}'),
+              if (currentStep == 4)
+                Text('Biaya: Rp. ${totalMedicinePrice / 2}'),
             ],
           ),
           actions: [
@@ -177,10 +179,22 @@ class _RincianReservasiState extends State<RincianReservasi> {
                   bottomNavIndex.value = 1;
                   await context.read<AuthCubit>().setStatusReservasiById(
                       context.read<AuthCubit>().Reservasi['id'], 5);
-                  await myAuth
-                      .getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
-                  await myAuth
-                      .getReservasiDoneByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+                  await myAuth.getReservasiByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+                  await myAuth.getReservasiDoneByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+                  await myAuth.getRekamMedisByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+
+                  await myAuth.getObatByIdDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+
+                  for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+                    await myAuth.getObatByIdDaftarProfilLain(
+                        myAuth.dataProfilLain[i]['id_daftar_profil'],
+                        myAuth.dataProfilLain[i]['id']);
+                  }
+
                   await Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return MyHomePage(
@@ -406,9 +420,14 @@ class _RincianReservasiState extends State<RincianReservasi> {
                       )
                     : currentStep == 3 && currentStep != 5
                         ? Container()
-                        : Image.asset(
-                            "assets/icon/QR.png",
-                            alignment: Alignment.center,
+                        : GestureDetector(
+                            onTap: () {
+                              _advanceStep(2);
+                            },
+                            child: Image.asset(
+                              "assets/icon/QR.png",
+                              alignment: Alignment.center,
+                            ),
                           ),
               ),
             ),
@@ -445,7 +464,6 @@ class _RincianReservasiState extends State<RincianReservasi> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(5, (index) {
                     return GestureDetector(
-                      onTap: () => _advanceStep(index),
                       child: Row(
                         children: [
                           CircleAvatar(
@@ -855,9 +873,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
                           myAuth.dataObatReservasi[i]['harga'];
                     }
 
-                    for (var i = 0;
-                        i < listDiagnosa.length;
-                        i++) {
+                    for (var i = 0; i < listDiagnosa.length; i++) {
                       await myAuth.postDaftarPenyakitProfil(
                           widget.idDaftarProfil,
                           listDiagnosa[i],
