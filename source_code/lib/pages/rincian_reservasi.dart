@@ -161,7 +161,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (currentStep == 0) Text('Biaya: Rp. 20.000'),
+              if (currentStep == 0) Text('Biaya: Rp. 50.000'),
               if (currentStep == 4)
                 Text('Biaya: Rp. ${totalMedicinePrice / 2}'),
             ],
