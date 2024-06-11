@@ -38,9 +38,8 @@ class _ProfilPasienState extends State<ProfilPasien> {
             children: [
               IconButton(
                 onPressed: () {
-  // Kembali ke halaman Profil dan kirim data yang diperbarui
-  Navigator.pop(context, myAuth.dataProfil);
-
+                  // Kembali ke halaman Profil dan kirim data yang diperbarui
+                  Navigator.pop(context, myAuth.dataProfil);
                 },
                 icon: Icon(
                   Icons.arrow_back,
@@ -167,7 +166,6 @@ class _ProfilPasienState extends State<ProfilPasien> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: myAuth.dataProfilLain.length,
                     itemBuilder: (context, index) {
-                      print(myAuth.dataProfilLain);
                       return Padding(
                         padding: EdgeInsets.only(top: 10, bottom: 10),
                         child: GestureDetector(
@@ -189,6 +187,8 @@ class _ProfilPasienState extends State<ProfilPasien> {
                             child: Padding(
                               padding: EdgeInsets.all(15),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween, // Added to align items
                                 children: [
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -212,6 +212,63 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                       ),
                                     ],
                                   ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Show the confirmation dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Konfirmasi'),
+                                            content: Text(
+                                                'Apakah anda yakin akan menghapus profil ini?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('Tidak'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text('Ya'),
+                                                onPressed: () async {
+                                                  // Call deleteProfilLainById function
+                                                  try {
+                                                    await myAuth
+                                                        .deleteProfilLainById(
+                                                            myAuth
+                                                                    .dataProfilLain[
+                                                                index]['id'],
+                                                            myAuth.state
+                                                                .accessToken);
+                                                    // Optionally remove the item from the list
+                                                    setState(() {
+                                                      myAuth.dataProfilLain
+                                                          .removeAt(index);
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  } catch (e) {
+                                                    print(
+                                                        'Error deleting profile: $e');
+                                                    // Optionally show an error message
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                'Error deleting profile.')));
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -220,6 +277,7 @@ class _ProfilPasienState extends State<ProfilPasien> {
                       );
                     },
                   ),
+
                   SizedBox(height: 10),
                   InkWell(
                     onTap: () {

@@ -958,5 +958,42 @@ class AuthCubit extends Cubit<AuthModel> {
     }
   }
 
+
+  Future<void> deleteProfilLainById(int idProfilLain, String accessToken) async {
+  try {
+    final response = await http.delete(
+      Uri.parse('http://127.0.0.1:8000/profil_lain/$idProfilLain'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      dataReservasi.removeWhere((profilLain) => profilLain['id'] == idProfilLain);
+      emit(AuthModel(
+        userID: state.userID, 
+        accessToken: state.accessToken, 
+        error: ""
+      ));
+      print('Profile deleted successfully.');
+    } else if (response.statusCode == 404) {
+      emit(AuthModel(
+        userID: state.userID,
+        accessToken: state.accessToken,
+        error: "Profil tidak ditemukan"
+      ));
+      print('Profile not found.');
+    } else {
+      // Handle other errors
+      print('Failed to delete profile.');
+    }
+  } catch (e) {
+    // Handle exceptions
+    print('Error deleting profile: $e');
+  }
+  
+  
+  }
   
 }
