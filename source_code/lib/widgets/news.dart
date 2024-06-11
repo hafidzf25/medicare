@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class News extends StatefulWidget {
   const News({super.key});
@@ -131,8 +132,6 @@ class _NewsState extends State<News> {
     );
   }
 
-
-
   // Fungsi untuk membangun konten kecantikan
   Widget buildBeautyContent() {
     return Container(
@@ -153,7 +152,35 @@ class _NewsState extends State<News> {
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: InkWell(
-        onTap: (){},
+        onTap: () {
+          if (newsTitle == 'Kenali Risiko dan Penanganan Cedera Olahraga Bulu Tangkis') {
+            _launchURL('https://mediaindonesia.com/olahraga/503193/ini-risiko-cedera-karena-bermain-bulu-tangkis-dan-penanganannya#google_vignette');
+          }
+          else if (newsTitle == 'Pentingnya Vaksinasi bagi Orang Dewasa') {
+            _launchURL('https://www.idntimes.com/health/fitness/eka-amira-yasien/alasan-pentingnya-vaksinasi-bagi-orang-dewasa');
+          }
+           else if (newsTitle == 'Cegah Kanker Serviks, Lakukan Vaksinasi HPV!') {
+            _launchURL('https://www.rspondokindah.co.id/id/news/cegah-kanker-serviks-lakukan-vaksinasi-hpv');
+          }
+          else if (newsTitle == 'Hasil Survei I-NAMHS: Satu dari Tiga Remaja Indonesia Memiliki Masalah Kesehatan Mental') {
+            _launchURL('https://ugm.ac.id/id/berita/23086-hasil-survei-i-namhs-satu-dari-tiga-remaja-indonesia-memiliki-masalah-kesehatan-mental/');
+          }
+           else if (newsTitle == '6 Tips Menjaga Kesehatan Mental Remaja') {
+            _launchURL('https://ners.unair.ac.id/site/index.php/news-fkp-unair/30-lihat/561-6-tips-menjaga-kesehatan-mental-remaja#:~:text=Nah%2C%20untuk%20remaja%20yang%20merasa%20mudah%20mengalami%20stress,Terbukalah%20pada%20Seseorang%206%20%E2%80%A2%20Tidur%20Tepat%20Waktu');
+          }
+          else if (newsTitle == 'Pentingkah Mahasiswa Menjaga Kesehatan Mental?') {
+            _launchURL('https://www.kompasiana.com/dayucinta4954/660257fede948f49b527a8e2/pentingnya-kesehatan-mental-di-kalangan-mahasiswa');
+          }
+           else if (newsTitle == 'Cara Mengatasi Kulit Kering saat Puasa yang Bisa Dilakukan') {
+            _launchURL('https://www.siloamhospitals.com/informasi-siloam/artikel/cara-mengatasi-kulit-kering-saat-puasa');
+          }
+          else if (newsTitle == 'Ini Tips Merawat Wajah saat Puasa, Tetap Sehat dan Cerah') {
+            _launchURL('https://www.siloamhospitals.com/informasi-siloam/artikel/tips-merawat-wajah-saat-puasa?source=qr-code');
+          }
+          else if (newsTitle == '5 Efek Samping Masker Putih Telur untuk Wajah, Harus Tahu!') {
+            _launchURL('https://www.siloamhospitals.com/informasi-siloam/artikel/efek-samping-putih-telur-untuk-wajah');
+          }
+        },
         child: Container(
           width: 300,
           child: Column(
@@ -195,5 +222,13 @@ class _NewsState extends State<News> {
         ),
       ),
     );
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

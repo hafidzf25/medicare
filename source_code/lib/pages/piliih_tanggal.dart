@@ -144,7 +144,7 @@ class _PilihTanggalState extends State<PilihTanggal> {
                     rowHeight: 43,
                     calendarStyle: const CalendarStyle(
                       defaultTextStyle: TextStyle(color: Colors.green),
-                      weekendTextStyle: TextStyle(color: Colors.red),
+                      weekendTextStyle: TextStyle(color: Colors.green),
                       outsideDaysVisible: false,
                       selectedDecoration: BoxDecoration(
                         color: Color(0xFF0D0A92),
@@ -153,8 +153,6 @@ class _PilihTanggalState extends State<PilihTanggal> {
                       selectedTextStyle: TextStyle(color: Colors.white),
                     ),
                     daysOfWeekStyle: const DaysOfWeekStyle(
-                      weekdayStyle: TextStyle(color: Colors.black),
-                      weekendStyle: TextStyle(color: Colors.red),
                     ),
                     headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
@@ -358,11 +356,13 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
     initializeDateFormatting('id_ID', locale);
 
     myAuth.getReservasiByTanggal(tanggal);
+    print(myAuth.dataBlokJadwal);
     List<Map<String, dynamic>> BlokJadwal = myAuth.dataBlokJadwal
         .where((reservasi) => reservasi['tanggal'] == tanggal)
         .toList();
-    // print(BlokJadwal);
-    // print(hasil);
+    print(BlokJadwal);
+    print(hasil);
+    // print("\n");
 
     // Buat List baru untuk menyimpan elemen hasil yang id-nya tidak ada di BlokJadwal pada key id_jam_kerja_dokter
     List<Map<String, dynamic>> newHasil = hasil
@@ -370,7 +370,7 @@ class _TimePickerPopupState extends State<TimePickerPopup> {
             (blokItem) => hasilItem['id'] == blokItem['id_jam_kerja_dokter']))
         .toList();
 
-    print(newHasil);
+    // print(newHasil);
 
     return Scaffold(
       backgroundColor: Colors.transparent,

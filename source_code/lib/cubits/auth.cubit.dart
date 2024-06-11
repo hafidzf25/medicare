@@ -29,6 +29,8 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Set<Map<String, dynamic>> tempDataObat = {};
 
+  double biaya_obat = 0;
+
   void setFromJson(Map<String, dynamic> json) {
     int userID = json['user_id'];
     String accessToken = json['access_token'];
@@ -157,7 +159,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Mengambil data profil lain berdasarkan id nya
   Future<dynamic> getProfilLainById(int idProfilLain) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/profil_lain/id/$idProfilLain'),
+        Uri.parse('http://127.0.0.1:8000/profil_lain/$idProfilLain'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -273,7 +275,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Mengambil data jam berdasarkan id jam yang diminta
   Future<dynamic> getJamById(int idJam) async {
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/jam/$idJam'), headers: {
+        await http.get(Uri.parse('http://127.0.0.1:8000/jam/id_jam/$idJam'), headers: {
       'Authorization': 'Bearer ${state.accessToken}',
     });
 
@@ -294,7 +296,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Melakukan get data dokter berdasarkan id dokter yang diminta
   Future<dynamic> getDokterById(int idDokter) async {
     final response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/Dokter/$idDokter'), headers: {
+        .get(Uri.parse('http://127.0.0.1:8000/dokter/$idDokter'), headers: {
       'Authorization': 'Bearer ${state.accessToken}',
     });
 
@@ -347,7 +349,7 @@ class AuthCubit extends Cubit<AuthModel> {
   Future<dynamic> getDaftarProfilByIdDaftarProfil(int idDaftarProfil) async {
     final response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/daftarprofil/id_daftar_profil/$idDaftarProfil'),
+            'http://127.0.0.1:8000/daftar_profil/id_daftar_profil/$idDaftarProfil'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -363,7 +365,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Mengambil data daftar profil berdasarkan id profil yang diminta
   Future<void> getDaftarProfilSiProfil(int idProfil) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/daftarprofil/$idProfil'),
+        Uri.parse('http://127.0.0.1:8000/daftar_profil/id_profil/$idProfil'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -379,7 +381,7 @@ class AuthCubit extends Cubit<AuthModel> {
   // Mengambil data daftar profil berdasarkan id profil lain yang diminta
   Future<dynamic> getDaftarProfilSiProfilLain(int idProfilLain) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/daftarprofil_lain/$idProfilLain'),
+        Uri.parse('http://127.0.0.1:8000/daftar_profil/id_profil_lain/$idProfilLain'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -422,7 +424,7 @@ class AuthCubit extends Cubit<AuthModel> {
   Future<void> getdoktorbyspesialis(int idSpesialis) async {
     final response = await http.get(
       Uri.parse(
-          'http://127.0.0.1:8000/dokter_by_spesialis/$idSpesialis?skip=0&limit=10'),
+          'http://127.0.0.1:8000/dokter/spesialis/$idSpesialis'),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ${state.accessToken}',
@@ -508,7 +510,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> setStatusReservasiById(int idReservasi, int status) async {
     final response = await http.put(
-      Uri.parse('http://127.0.0.1:8000/reservasi_edit_status/$idReservasi'),
+      Uri.parse('http://127.0.0.1:8000/reservasi/edit_status/$idReservasi'),
       headers: {
         'Authorization': 'Bearer ${state.accessToken}',
         'Content-Type': 'application/json',
@@ -531,7 +533,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getReservasiByTanggal(String Tanggal) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/reservasi_tgl/$Tanggal'),
+        Uri.parse('http://127.0.0.1:8000/reservasi/tgl/$Tanggal'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -557,7 +559,7 @@ class AuthCubit extends Cubit<AuthModel> {
   Future<void> getReservasiByDaftarProfil(int idDaftarProfil) async {
     final response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/$idDaftarProfil?skip=0&limit=10'),
+            'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/$idDaftarProfil'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -585,7 +587,7 @@ class AuthCubit extends Cubit<AuthModel> {
   Future<void> getReservasiDoneByDaftarProfil(int idDaftarProfil) async {
     final response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/status_done/$idDaftarProfil'),
+            'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -613,7 +615,7 @@ class AuthCubit extends Cubit<AuthModel> {
   Future<void> getRekamMedisByDaftarProfil(int idDaftarProfil) async {
     final response = await http.get(
         Uri.parse(
-            'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/status_done/$idDaftarProfil'),
+            'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -649,7 +651,7 @@ class AuthCubit extends Cubit<AuthModel> {
       int idDaftarProfil, int idx) async {
     final response = await http.get(
       Uri.parse(
-          'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/$idDaftarProfil?skip=0&limit=10'),
+          'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/$idDaftarProfil'),
       headers: {
         'Authorization': 'Bearer ${state.accessToken}',
       },
@@ -679,7 +681,7 @@ class AuthCubit extends Cubit<AuthModel> {
       int idDaftarProfil, int idx) async {
     final response = await http.get(
       Uri.parse(
-          'http://127.0.0.1:8000/reservasi_by_id_daftar_profil/status_done/$idDaftarProfil'),
+          'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
       headers: {
         'Authorization': 'Bearer ${state.accessToken}',
       },
@@ -701,6 +703,43 @@ class AuthCubit extends Cubit<AuthModel> {
       dataHistoryReservasi.addAll(hasil);
     } else {
       throw Exception('Failed to load history reservasi');
+    }
+  }
+
+  Future<void> getRekamMedisByDaftarProfilLain(int idDaftarProfil, int idx) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://127.0.0.1:8000/reservasi/by_id_daftar_profil/status_done/$idDaftarProfil'),
+        headers: {
+          'Authorization': 'Bearer ${state.accessToken}',
+        });
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Map<String, dynamic>> hasil =
+          body.map((dynamic item) => item as Map<String, dynamic>).toList();
+      dataRekamMedis = hasil;
+      print(dataRekamMedis);
+      for (var i = 0; i < dataRekamMedis.length; i++) {
+        var temp = await getJamKerjaDokterById(
+            dataRekamMedis[i]['id_jam_kerja_dokter']);
+        dataRekamMedis[i]['dokter'] = temp['dokter'];
+        var tempPenyakit = await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
+        
+        var nama = await getProfilLainById(idx);
+        dataRekamMedis[i]['nama'] = nama['nama'];
+        dataRekamMedis[i]['tanggal_lahir'] = nama['tanggal_lahir'];
+        dataRekamMedis[i]['foto'] = nama['foto'];
+
+        // Mengambil semua nilai `id_penyakit` dari setiap elemen dalam data
+        List<String> daftarPenyakit = tempPenyakit.map((item) => item['penyakit'] as String).toList();
+
+        // Menggabungkan nilai-nilai tersebut menjadi satu string yang dipisahkan oleh koma
+        String printPenyakit = daftarPenyakit.join(', ');
+        dataRekamMedis[i]['penyakit'] = printPenyakit;
+      }
+    } else {
+      throw Exception('Failed to load rekam medis');
     }
   }
 
@@ -758,7 +797,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getProfilLain(int idUser) async {
     final response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/profil_lain/$idUser'), headers: {
+        .get(Uri.parse('http://127.0.0.1:8000/profil_lain/id_user/$idUser'), headers: {
       'Authorization': 'Bearer ${state.accessToken}',
     });
 
@@ -793,7 +832,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getPenyakitDariObatByIdSpesialis(int idSpesialis) async {
     final response = await http
-        .get(Uri.parse('http://127.0.0.1:8000/obat/$idSpesialis'), headers: {
+        .get(Uri.parse('http://127.0.0.1:8000/obat/spesialis/$idSpesialis'), headers: {
       'Authorization': 'Bearer ${state.accessToken}',
     });
 
@@ -817,7 +856,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
   Future<void> getObatByIdPenyakit(int idPenyakit) async {
     final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/obat_by_penyakit/$idPenyakit'),
+        Uri.parse('http://127.0.0.1:8000/obat/penyakit/$idPenyakit'),
         headers: {
           'Authorization': 'Bearer ${state.accessToken}',
         });
@@ -885,4 +924,39 @@ class AuthCubit extends Cubit<AuthModel> {
       }),
     );
   }
+
+
+  Future<void> deleteReservasi(int reservasiId) async {
+    final response = await http.delete(
+      Uri.parse('http://127.0.0.1:8000/reservasi_delete/$reservasiId'),
+      headers: {
+        'Authorization': 'Bearer ${state.accessToken}',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Menghapus reservasi dari local state jika diperlukan
+      dataReservasi.removeWhere((reservasi) => reservasi['id'] == reservasiId);
+      emit(AuthModel(
+        userID: state.userID, 
+        accessToken: state.accessToken, 
+        error: ""
+      ));
+    } else if (response.statusCode == 404) {
+      emit(AuthModel(
+        userID: state.userID,
+        accessToken: state.accessToken,
+        error: "Reservasi tidak ditemukan"
+      ));
+    } else {
+      emit(AuthModel(
+        userID: state.userID,
+        accessToken: state.accessToken,
+        error: "Gagal menghapus reservasi"
+      ));
+    }
+  }
+
+  
 }

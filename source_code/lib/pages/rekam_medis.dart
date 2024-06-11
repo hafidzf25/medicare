@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -153,8 +154,14 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                       ],
                     ),
                     child: TextButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // Fungsi yang akan dijalankan saat tombol ditekan
+                        myAuth.dataRekamMedis = [];
+                        for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+                          await myAuth.getRekamMedisByDaftarProfilLain(
+                              myAuth.dataProfilLain[i]['id_daftar_profil'],
+                              myAuth.dataProfilLain[i]['id']);
+                        }
                         setState(() {
                           // Fungsi yang akan dijalankan saat tombol ditekan
                           profillain = true;
@@ -194,66 +201,69 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                     EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
                 child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 7,
-                            offset: Offset(0, 2),
-                          )
-                        ]),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 7,
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(20),
-                      child: Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(300),
-                                  child: Image.asset(
-                                    "assets/images/${data['foto']}",
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(300),
+                                child: Image.asset(
+                                  "assets/images/profile8.jpg",
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
                                 ),
-                                SizedBox(
-                                  width: 15,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Nama",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                    Text(
+                                      "Tanggal",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                    Text(
+                                      "Nama Dokter",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Nama",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      ),
-                                      Text(
-                                        "Tanggal",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      ),
-                                      Text(
-                                        "Nama Dokter",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Column(
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       ": ${data['nama']}",
@@ -275,26 +285,26 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            Divider(),
-                            Text(
-                              "Penyakit : ${data['penyakit']}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            Text(
-                              "Obat        : Panadol",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            Text(
-                              "Tindakan : Rawat Jalan",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Text(
+                            "Penyakit : ${data['penyakit']}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          Text(
+                            "Obat        : Panadol",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          Text(
+                            "Tindakan : Rawat Jalan",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                        ],
                       ),
                     )),
               );

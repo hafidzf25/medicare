@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/main.dart';
 import 'package:source_code/pages/landingPage.dart';
+import 'package:source_code/pages/reservasi_tab.dart';
+import '../widgets/GreenButton.dart';
+import 'pages/home_page.dart';
 import 'pages/notif.dart';
 import 'pages/profil.dart';
-import 'pages/reservasi_tab.dart';
-import 'pages/home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -16,9 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(0);
+
     return BlocProvider(
       create: (context) => AuthCubit(),
-      child: const MaterialApp(
+      child: MaterialApp(
         title: 'MediCare',
         debugShowCheckedModeBanner: false,
         home: LandingPage(),
@@ -28,37 +36,51 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final ValueNotifier<int> bottomNavIndex;
+  const MyHomePage({super.key, required this.bottomNavIndex});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+  late ValueNotifier<int> _bottomNavIndex;
 
-  void _navigateBottomBar(int index) {
+  @override
+  void initState() {
+    super.initState();
+    _bottomNavIndex = widget.bottomNavIndex;
+    _bottomNavIndex.addListener(_navigateBottomBar);
+  }
+
+  @override
+  void dispose() {
+    _bottomNavIndex.removeListener(_navigateBottomBar);
+    super.dispose();
+  }
+
+  void _navigateBottomBar() {
     setState(() {
-      _selectedIndex = index;
+      // This will rebuild the widget tree with the new selected index
     });
   }
 
   final List<Widget> _pages = [
-    const HomeScreen(),
-   ReservasiTab(),
-    const Notifikasi(),
-    const Profil(),
+    HomeScreen(),
+    ReservasiTab(),
+    Notifikasi(),
+    Profil(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _selectedIndex == 0 ? _buildAppBar() : null,
-      body: _pages[_selectedIndex],
+      appBar: _bottomNavIndex.value == 0 ? _buildAppBar() : null,
+      body: _pages[_bottomNavIndex.value],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: _navigateBottomBar,
+        currentIndex: _bottomNavIndex.value,
+        onTap: (index) => _bottomNavIndex.value = index,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         selectedItemColor: const Color(0xFF00C607),
@@ -77,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Profil',
           ),
         ],
       ),

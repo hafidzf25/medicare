@@ -359,6 +359,7 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                           widget.idxJadwal,
                           widget.idxDaftarProfil,
                           widget.biaya);
+                      await myAuth.getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
                       await Navigator.push(
                         context,
                         MaterialPageRoute(

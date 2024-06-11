@@ -113,7 +113,7 @@ class PilihDokter extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(top: 10),
                                   child: Text(
-                                    "${myAuth.Spesialis['nama']} - Spesialis ${myAuth.Spesialis['nama']}",
+                                    "Spesialis ${myAuth.Spesialis['nama']}",
                                     style: GoogleFonts.poppins(
                                       fontSize: 12,
                                     ),

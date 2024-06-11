@@ -201,6 +201,7 @@ class _IsiBodyState extends State<IsiBody> {
                       await context.read<AuthCubit>().getReservasiById(
                           reserve['id'], profil, reserve['id_spesialis']);
                       if (reserve['status'] == 3) {
+                        myAuth.dataPenyakitReservasi = [];
                         await myAuth.getPenyakitDariObatByIdSpesialis(
                             reserve['id_spesialis']);
                       } else if (reserve['status'] == 4) {
@@ -209,6 +210,7 @@ class _IsiBodyState extends State<IsiBody> {
                         myAuth.dataDiagnosaReservasi = [];
                         await myAuth
                             .getDiagnosaPenyakitByReservasi(reserve['id']);
+                        print(myAuth.dataDiagnosaReservasi);
                         for (var i = 0;
                             i < myAuth.dataDiagnosaReservasi.length;
                             i++) {
@@ -227,6 +229,17 @@ class _IsiBodyState extends State<IsiBody> {
                         }
 
                         myAuth.dataObatReservasi = obatUnik.toList();
+
+                        double totalMedicinePrice = 0;
+
+                        for (var i = 0;
+                            i < myAuth.dataObatReservasi.length;
+                            i++) {
+                          totalMedicinePrice +=
+                              myAuth.dataObatReservasi[i]['harga'];
+                        }
+
+                        myAuth.biaya_obat = totalMedicinePrice;
                       }
                       await Navigator.push(
                         context,
@@ -234,6 +247,7 @@ class _IsiBodyState extends State<IsiBody> {
                           builder: (context) => RincianReservasi(
                             status: reserve['status'],
                             idDaftarProfil: reserve['id_daftar_profil'],
+                            total: myAuth.biaya_obat,
                           ),
                         ),
                       );

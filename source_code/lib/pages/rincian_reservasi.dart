@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:source_code/main.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/pages/landingPage.dart';
+import 'package:source_code/pages/reservasi.dart';
+import 'package:source_code/pages/reservasi_tab.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -12,10 +15,11 @@ void main() {
 }
 
 class RincianReservasi extends StatefulWidget {
-  RincianReservasi({super.key, this.status = 0, this.idDaftarProfil = 0});
+  RincianReservasi({super.key, this.status = 0, this.idDaftarProfil = 0, this.total = 0});
 
   int status;
   int idDaftarProfil;
+  double total;
 
   @override
   _RincianReservasiState createState() => _RincianReservasiState();
@@ -27,9 +31,13 @@ class _RincianReservasiState extends State<RincianReservasi> {
   Set<int> selectedDiagnoses = {};
   double totalMedicinePrice = 0;
 
+  // Initialize the ValueNotifier here
+  final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(1);
+
   @override
   void initState() {
     super.initState();
+    totalMedicinePrice = widget.total;
     // Mengambil nilai status dari widget dan menaruhnya di currentStep
     currentStep = widget.status;
   }
@@ -155,7 +163,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (currentStep == 0) Text('Biaya: Rp. 20.000'),
-              if (currentStep == 4) Text('Biaya: Rp. $totalMedicinePrice'),
+              if (currentStep == 4) Text('Biaya: Rp. ${totalMedicinePrice/2}'),
             ],
           ),
           actions: [
@@ -166,18 +174,22 @@ class _RincianReservasiState extends State<RincianReservasi> {
                 print(Reservasi);
 
                 if (currentStep == 4) {
+                  bottomNavIndex.value = 1;
                   await context.read<AuthCubit>().setStatusReservasiById(
                       context.read<AuthCubit>().Reservasi['id'], 5);
                   await myAuth
-                      .getReservasiByDaftarProfil(widget.idDaftarProfil);
+                      .getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
                   await myAuth
-                      .getReservasiDoneByDaftarProfil(widget.idDaftarProfil);
+                      .getReservasiDoneByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
                   await Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return MyHomePage();
+                      return MyHomePage(
+                        bottomNavIndex: bottomNavIndex,
+                      );
                     },
                   ));
                 } else {
+                  Navigator.pop(context);
                   var Reservasi = context.read<AuthCubit>().Reservasi;
                   context
                       .read<AuthCubit>()
@@ -191,6 +203,49 @@ class _RincianReservasiState extends State<RincianReservasi> {
           ],
         );
       },
+    );
+  }
+
+  void _showCancellationConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Konfirmasi Pembatalan'),
+          content: Text('Apakah Anda yakin ingin membatalkan reservasi ini?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Tidak'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
+                await _cancelReservation(); // Cancel the reservation
+              },
+              child: Text('Ya'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _cancelReservation() async {
+    AuthCubit myAuth = context.read<AuthCubit>();
+    await myAuth.deleteReservasi(myAuth.Reservasi['id']);
+    await myAuth
+        .getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+    await myAuth
+        .getReservasiDoneByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+    bottomNavIndex.value = 1; // Indeks untuk ReservasiTab
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -232,10 +287,6 @@ class _RincianReservasiState extends State<RincianReservasi> {
     AuthCubit myAuth = context.read<AuthCubit>();
     double screenWidth = MediaQuery.of(context).size.width;
 
-    // totalMedicinePrice = medicines
-    //     .map<double>((medicine) => medicine['price'] as double)
-    //     .reduce((a, b) => a + b);
-
     List<String> stepDescriptions = [
       "Silahkan lakukan pembayaran",
       "Pindai kode QR untuk Check In",
@@ -255,8 +306,18 @@ class _RincianReservasiState extends State<RincianReservasi> {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
+                onPressed: () async {
+                  bottomNavIndex.value = 1;
+                  await context.read<AuthCubit>().getReservasiByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return MyHomePage(bottomNavIndex: bottomNavIndex);
+                      },
+                    ),
+                  );
                 },
                 icon: Icon(
                   Icons.arrow_back,
@@ -795,11 +856,11 @@ class _RincianReservasiState extends State<RincianReservasi> {
                     }
 
                     for (var i = 0;
-                        i < myAuth.dataPenyakitReservasi.length;
+                        i < listDiagnosa.length;
                         i++) {
                       await myAuth.postDaftarPenyakitProfil(
                           widget.idDaftarProfil,
-                          myAuth.dataPenyakitReservasi[i]['id'],
+                          listDiagnosa[i],
                           myAuth.Reservasi['id']);
                       print(i);
                     }
@@ -838,10 +899,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(bottom: 20),
               child: Center(
                 child: GestureDetector(
-                  onTap: () {
-                    // Function to be executed when text is tapped
-                    // Place the action you want to perform when the text is tapped here
-                  },
+                  onTap: _showCancellationConfirmationDialog,
                   child: Text(
                     'BATALKAN RESERVASI',
                     style: TextStyle(

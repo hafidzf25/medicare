@@ -44,22 +44,23 @@ class Notifikasi extends StatelessWidget {
               ],
             ),
           )),
-      body: Column(
+      body: ListView(
         children: [
           Padding(
             padding: EdgeInsets.only(top: 40, left: 40, right: 40, bottom: 20),
             child: Container(
               width: screenWidth * 0.9,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3))
-                  ]),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3))
+                ],
+              ),
               child: Padding(
                 padding: EdgeInsets.all(0),
                 child: Row(
@@ -81,10 +82,24 @@ class Notifikasi extends StatelessWidget {
                     ),
                     Padding(padding: EdgeInsets.only(left: 5)),
                     Expanded(
-                      child: Text(
-                        '"Halo, jangan lupa bahwa Anda memiliki janji temu dengan dr. Shidiq. Pastikan untuk mempersiapkan diri dan datang tepat waktu. Kesehatan adalah prioritas utama. Semoga hari Anda menyenangkan!"',
-                        style: TextStyle(fontSize: 15),
-                        softWrap: true,
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: [
+                          Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    '"Halo, jangan lupa bahwa Anda memiliki janji temu dengan dr. Shidiq. Pastikan untuk mempersiapkan diri dan datang tepat waktu. Kesehatan adalah prioritas utama. Semoga hari Anda menyenangkan!"',
+                                    style: TextStyle(fontSize: 15),
+                                    softWrap: true,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],

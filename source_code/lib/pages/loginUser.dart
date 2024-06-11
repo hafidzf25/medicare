@@ -4,13 +4,6 @@ import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/main.dart';
 import 'package:source_code/models/auth.model.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: LoginUser(),
-  ));
-}
-
 class LoginUser extends StatefulWidget {
   @override
   _LoginUserState createState() => _LoginUserState();
@@ -21,6 +14,9 @@ class _LoginUserState extends State<LoginUser> {
   String _email = '';
   String _pass = '';
 
+  // Initialize the ValueNotifier here
+  final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(0);
+
   @override
   Widget build(BuildContext context) {
     AuthCubit myAuth = context.read<AuthCubit>();
@@ -29,9 +25,10 @@ class _LoginUserState extends State<LoginUser> {
       body: BlocListener<AuthCubit, AuthModel>(
         listener: (context, state) {
           if (state.userID != 0 && state.accessToken.isNotEmpty) {
+            bottomNavIndex.value = 0; // Indeks untuk ReservasiTab
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyHomePage()),
+              MaterialPageRoute(builder: (context) => MyHomePage(bottomNavIndex: bottomNavIndex)),
             );
           } else if (state.error.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -82,7 +79,7 @@ class _LoginUserState extends State<LoginUser> {
                     ),
                     SizedBox(height: 16.0),
                     TextFormField(
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: 'Email',
                       ),
