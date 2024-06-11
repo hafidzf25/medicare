@@ -18,26 +18,6 @@ class _TambahProfilState extends State<TambahProfil> {
   String _name = '';
   DateTime? _dateOfBirth;
   String _gender = '';
-  Uint8List? _galleryImageBytes;
-
-  void getImageFromGallery() {
-    final input = html.FileUploadInputElement();
-    input.accept = 'image/*';
-    input.click();
-
-    input.onChange.listen((event) {
-      final file = input.files!.first;
-      final reader = html.FileReader();
-
-      reader.onLoad.listen((event) {
-        setState(() {
-          _galleryImageBytes = reader.result as Uint8List?;
-        });
-      });
-
-      reader.readAsArrayBuffer(file);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,25 +59,6 @@ class _TambahProfilState extends State<TambahProfil> {
                     ),
                   ),
                   SizedBox(height: 16.0),
-                  Center(
-                    child: GestureDetector(
-                      onTap: getImageFromGallery,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey[300],
-                        backgroundImage: _galleryImageBytes != null
-                            ? MemoryImage(_galleryImageBytes!)
-                            : null,
-                        child: _galleryImageBytes == null
-                            ? Icon(
-                                Icons.camera_alt,
-                                size: 50,
-                                color: Colors.grey[700],
-                              )
-                            : null,
-                      ),
-                    ),
-                  ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Nama Lengkap',
@@ -213,34 +174,36 @@ class _TambahProfilState extends State<TambahProfil> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-  if (_formKey.currentState!.validate()) {
-    _formKey.currentState!.save();
-    String base64Image = '';
-    if (_galleryImageBytes != null) {
-      base64Image = base64.encode(_galleryImageBytes!);
-    }
-    final authCubit = context.read<AuthCubit>();
-    authCubit.tambahProfilLain(
-      authCubit.state.userID,
-      _name,
-      _gender,
-      _dateOfBirth.toString(),
-      base64Image,
-    ).then((_) async {
-      await authCubit.getProfilLain(authCubit.dataProfil['id_user']);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilPasien()),
-      );
-    }).catchError((error) {
-      // Handle error
-      print('Failed to add profile: $error');
-    });
-  }
-},
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          String base64Image = '';
 
+                          final authCubit = context.read<AuthCubit>();
+                          authCubit
+                              .tambahProfilLain(
+                            authCubit.state.userID,
+                            _name,
+                            _gender,
+                            _dateOfBirth.toString(),
+                            base64Image,
+                          )
+                              .then((_) async {
+                            await authCubit
+                                .getProfilLain(authCubit.dataProfil['id_user']);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProfilPasien()),
+                            );
+                          }).catchError((error) {
+                            // Handle error
+                            print('Failed to add profile: $error');
+                          });
+                        }
+                      },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.green),
                       ),
                       child: Text(
                         'TAMBAH',

@@ -219,15 +219,7 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                         children: [
                           Row(
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(300),
-                                child: Image.asset(
-                                  "assets/images/profile8.jpg",
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                              
                               SizedBox(
                                 width: 15,
                               ),

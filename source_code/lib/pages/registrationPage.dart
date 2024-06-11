@@ -172,25 +172,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     style: GoogleFonts.poppins(fontSize: 16.0),
                   ),
                   SizedBox(height: 32.0),
-                  Center(
-                    child: GestureDetector(
-                      onTap: getImageFromGallery,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey[300],
-                        backgroundImage: _galleryImageBytes != null
-                            ? MemoryImage(_galleryImageBytes!)
-                            : null,
-                        child: _galleryImageBytes == null
-                            ? Icon(
-                                Icons.camera_alt,
-                                size: 50,
-                                color: Colors.grey[700],
-                              )
-                            : null,
-                      ),
-                    ),
-                  ),
+            
                   SizedBox(height: 16.0),
                   TextFormField(
                     decoration: InputDecoration(
