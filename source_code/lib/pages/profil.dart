@@ -27,6 +27,7 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     AuthCubit myAuth = context.read<AuthCubit>();
+    final String? foto = myAuth.dataProfil['foto'];
 
     return Scaffold(
       body: Stack(
@@ -67,13 +68,16 @@ class _ProfilState extends State<Profil> {
                     CircleAvatar(
                       radius: 55,
                       backgroundColor: Color(0xFFD9D9D9),
-                      backgroundImage: AssetImage(
-                          "assets/images/${context.read<AuthCubit>().dataProfil['foto']}"),
-                      child: const Icon(
-                        Icons.person,
-                        size: 1,
-                        color: Colors.black,
-                      ),
+                      backgroundImage: foto != null && foto.isNotEmpty
+                          ? AssetImage("assets/images/$foto")
+                          : null,
+                      child: foto == null || foto.isEmpty
+                          ? const Icon(
+                              Icons.person,
+                              size: 55, // Sesuaikan ukuran sesuai kebutuhan
+                              color: Colors.black,
+                            )
+                          : null,
                     ),
                     const SizedBox(width: 20),
                     Column(

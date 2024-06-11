@@ -103,15 +103,7 @@ class Isi_HasilLab extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(300),
-                                        child: Image.asset(
-                                          "assets/icon/person1.jpg",
-                                          width: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                     
                                       SizedBox(
                                         width: 15,
                                       ),
@@ -231,14 +223,7 @@ class Isi_HasilLab extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Image.asset(
-                                          "assets/icon/person2.png",
-                                          width: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                      
                                       SizedBox(
                                         width: 15,
                                       ),
