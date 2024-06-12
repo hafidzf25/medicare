@@ -116,7 +116,6 @@ class Isi_HasilLab extends StatelessWidget {
                                                           FontWeight.bold,
                                                       fontSize: 15),
                                                 ),
-                                              
                                                 Text(
                                                   "Jenis Kelamin",
                                                   style: TextStyle(
@@ -147,7 +146,6 @@ class Isi_HasilLab extends StatelessWidget {
                                                           FontWeight.bold,
                                                       fontSize: 15),
                                                 ),
-                                          
                                                 Text(
                                                   ": ${Pasien['jenis_kelamin']}",
                                                   style: TextStyle(
@@ -191,121 +189,103 @@ class Isi_HasilLab extends StatelessWidget {
                         shrinkWrap: true,
                         itemCount: myAuth.dataLabProfilLain.isEmpty
                             ? 1
-                            : myAuth.dataProfilLain.length,
+                            : myAuth.dataLabProfilLain.length,
                         itemBuilder: (context, index) {
                           if (myAuth.dataLabProfilLain.isEmpty) {
                             return Text(
                                 "Tidak ada data lab untuk Profil Lain.");
                           } else {
+                            var Pasien = myAuth.dataLabProfilLain[index];
                             return Padding(
                               padding: EdgeInsets.only(top: 10),
                               child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 2,
-                                          blurRadius: 7,
-                                          offset: Offset(0, 2),
-                                        )
-                                      ]),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Nama",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  "Umur",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  "Tanggal",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  "Jenis Kelamin",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              width: 15,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  ": ${myAuth.dataLabProfilLain[index]['nama_pasien']}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  ": ${myAuth.dataLabProfilLain[index]['umur']}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  ": ${myAuth.dataLabProfilLain[index]['tanggal_lahir']}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  ": ${myAuth.dataLabProfilLain[index]['jenis_kelamin']}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Divider(),
-                                        Text(
-                                          "${myAuth.dataLabProfilLain[index]['nama_lab']}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15),
-                                        ),
-                                        Text(
-                                          "${myAuth.dataLabProfilLain[index]['deskripsi_lab']}",
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 7,
+                                        offset: Offset(0, 2),
+                                      )
+                                    ]),
+                                child: Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Nama",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                              Text(
+                                                "Umur",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                              Text(
+                                                "Jenis Kelamin",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 15,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                ": ${Pasien['nama_pasien']}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                              Text(
+                                                ": ${Pasien['umur']}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                              Text(
+                                                ": ${Pasien['jenis_kelamin']}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Text(
+                                        "${Pasien['nama_lab']}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                      Text(
+                                        "${Pasien['deskripsi_lab']}",
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             );
                           }
                         },

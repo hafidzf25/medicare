@@ -110,6 +110,7 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           ClipRRect(
                                             borderRadius:
@@ -132,10 +133,10 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                     Row(
                                                       children: [
                                                         Expanded(
-                                                          flex: 4,
+                                                          flex: 3,
                                                           child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
                                                               Text(
                                                                 "Nama",
@@ -161,7 +162,7 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                         ),
                                                         SizedBox(width: 15),
                                                         Expanded(
-                                                          flex: 6,
+                                                          flex: 7,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -262,6 +263,7 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           ClipRRect(
                                             borderRadius:
@@ -284,10 +286,10 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                     Row(
                                                       children: [
                                                         Expanded(
-                                                          flex: 4,
+                                                          flex: 3,
                                                           child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
                                                               Text(
                                                                 "Nama",
@@ -313,7 +315,7 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                         ),
                                                         SizedBox(width: 15),
                                                         Expanded(
-                                                          flex: 6,
+                                                          flex: 7,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment

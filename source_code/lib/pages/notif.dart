@@ -65,7 +65,7 @@ class Notifikasi extends StatelessWidget {
                   DateFormat('EEEE, d MMMM y', 'id_ID').format(date);
               return Padding(
                 padding:
-                    EdgeInsets.only(top: 40, left: 40, right: 40, bottom: 20),
+                    EdgeInsets.only(top: 30, left: 40, right: 40),
                 child: Container(
                   width: screenWidth * 0.9,
                   decoration: BoxDecoration(
@@ -130,7 +130,7 @@ class Notifikasi extends StatelessWidget {
                   DateFormat('EEEE, d MMMM y', 'id_ID').format(date);
               return Padding(
                 padding:
-                    EdgeInsets.only(top: 40, left: 40, right: 40, bottom: 20),
+                    EdgeInsets.only(top: 30, left: 40, right: 40),
                 child: Container(
                   width: screenWidth * 0.9,
                   decoration: BoxDecoration(
@@ -192,7 +192,7 @@ class Notifikasi extends StatelessWidget {
               var notifobat = myAuth.dataAkhirObat[index];
               return Padding(
                 padding:
-                    EdgeInsets.only(top: 40, left: 40, right: 40, bottom: 20),
+                    EdgeInsets.only(top: 30, left: 40, right: 40),
                 child: Container(
                   width: screenWidth * 0.9,
                   decoration: BoxDecoration(
