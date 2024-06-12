@@ -110,13 +110,6 @@ class Isi_HasilLab extends StatelessWidget {
                                                       fontSize: 15),
                                                 ),
                                                 Text(
-                                                  "Umur",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
                                                   "Tanggal",
                                                   style: TextStyle(
                                                       fontWeight:
@@ -141,13 +134,6 @@ class Isi_HasilLab extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   ": ${Pasien['nama_pasien']}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  ": ${Pasien['umur']}",
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
