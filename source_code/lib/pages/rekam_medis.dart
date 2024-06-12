@@ -302,7 +302,7 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                           Row(
                             children: [
                               Expanded(
-                                flex: 2,
+                                flex: 3,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
@@ -330,7 +330,7 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                                 ),
                               ),
                               Expanded(
-                                flex: 8,
+                                flex: 7,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

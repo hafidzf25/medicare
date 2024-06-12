@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import './isi_faq.dart';
 
 void main() {
@@ -93,7 +94,6 @@ class FAQ extends StatelessWidget {
   Widget faqButton(BuildContext context, double screenWidth, String question, String answer, List<String> imagePaths) {
     return Container(
       width: screenWidth * 0.9,
-      height: 42,
       child: Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
@@ -110,15 +110,17 @@ class FAQ extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                question,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  question,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold),
+                ),
               ),
-              Spacer(),
+
               Icon(
                 Icons.chevron_right,
                 color: Colors.black,

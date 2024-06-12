@@ -109,7 +109,7 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                     children: [
                                       Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           ClipRRect(
                                             borderRadius:
@@ -117,30 +117,25 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                             child: Image.asset(
                                               "assets/images/${Pasien['foto']}",
                                               width:
-                                                  150, // Adjust width as needed
+                                                  120, // Adjust width as needed
                                               height:
-                                                  150, // Adjust height as needed
+                                                  120, // Adjust height as needed
                                               fit: BoxFit.cover,
                                             ),
                                           ),
                                           SizedBox(width: 15),
                                           Expanded(
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Row(
                                                       children: [
                                                         Expanded(
-                                                          flex: 3,
+                                                          flex: 4,
                                                           child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
                                                               Text(
                                                                 "Nama",
@@ -160,21 +155,13 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                                     fontSize:
                                                                         15),
                                                               ),
-                                                              Text(
-                                                                "Tanggal",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        15),
-                                                              ),
+                                                          
                                                             ],
                                                           ),
                                                         ),
                                                         SizedBox(width: 15),
                                                         Expanded(
-                                                          flex: 7,
+                                                          flex: 6,
                                                           child: Column(
                                                             crossAxisAlignment:
                                                                 CrossAxisAlignment
@@ -198,15 +185,7 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                                     fontSize:
                                                                         15),
                                                               ),
-                                                              Text(
-                                                                ": ${Pasien['tanggal_lahir']}",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        15),
-                                                              ),
+                                                              
                                                             ],
                                                           ),
                                                         ),
@@ -214,23 +193,21 @@ class Isi_HasilRadiologi extends StatelessWidget {
                                                     ),
                                                   ],
                                                 ),
-                                                Divider(),
-                                                Text(
-                                                  "Tes : ${Pasien['nama_radiologi']}",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15),
-                                                ),
-                                                Text(
-                                                  "${Pasien['deskripsi_radiologi']}",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
                                               ],
                                             ),
                                           ),
                                         ],
+                                      ),
+                                      Divider(),
+                                      Text(
+                                        "Tes : ${Pasien['nama_radiologi']}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                      Text(
+                                        "${Pasien['deskripsi_radiologi']}",
+                                        style: TextStyle(fontSize: 15),
                                       ),
                                     ],
                                   ),

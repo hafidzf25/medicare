@@ -362,7 +362,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(top: 30),
               child: Center(
                 child: Container(
-                  width: 400,
+                  width: screenWidth * 0.9,
                   padding: EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -505,7 +505,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
             padding: EdgeInsets.only(top: 20),
             child: Center(
               child: Container(
-                width: 400,
+                width: screenWidth * 0.9,
                 height: 80,
                 decoration: BoxDecoration(
                   color: Color(0xFFFFFDC8),
@@ -561,7 +561,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(top: 0),
               child: Center(
                 child: Container(
-                  width: 400,
+                  width: screenWidth * 0.9,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -605,7 +605,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(top: 0),
               child: Center(
                 child: Container(
-                  width: 400,
+                  width: screenWidth * 0.9,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -649,7 +649,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(top: 0),
               child: Center(
                 child: Container(
-                  width: 400,
+                  width: screenWidth * 0.9,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -742,7 +742,7 @@ class _RincianReservasiState extends State<RincianReservasi> {
               padding: EdgeInsets.only(top: 20),
               child: Center(
                 child: Container(
-                  width: 400,
+                  width: screenWidth * 0.9,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),

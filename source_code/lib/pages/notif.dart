@@ -89,7 +89,8 @@ class Notifikasi extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF0D0A92),
                           ),
-                          height: 110,
+                          
+                          height: 190,
                           width: 95,
                           child: Icon(
                             Icons.calendar_today_outlined,
@@ -162,7 +163,8 @@ class Notifikasi extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF0D0A92),
                           ),
-                          height: 110,
+                          
+                          height: 190,
                           width: 95,
                           child: Icon(
                             Icons.calendar_today_outlined,
@@ -172,7 +174,7 @@ class Notifikasi extends StatelessWidget {
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.only(left: 10, right: 10),
                             child: ListView(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -234,7 +236,7 @@ class Notifikasi extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF0D0A92),
                           ),
-                          height: 110,
+                          height: 190,
                           width: 95,
                           child: Icon(
                             Icons.medication_liquid_rounded,

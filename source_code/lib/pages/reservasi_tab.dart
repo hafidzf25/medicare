@@ -79,7 +79,6 @@ class _IsiBodyState extends State<IsiBody> {
             child: Row(
               children: [
                 Container(
-                  width: 130,
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
