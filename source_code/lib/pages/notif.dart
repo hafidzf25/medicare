@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,7 +90,6 @@ class Notifikasi extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF0D0A92),
                           ),
-                          
                           height: 190,
                           width: 95,
                           child: Icon(
@@ -98,26 +98,18 @@ class Notifikasi extends StatelessWidget {
                             size: 45,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: ListView(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: [
-                              Column(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        '"Halo ${notif['nama']}!, jangan lupa untuk melakukan janji temu bersama Dokter ${notif['dokter']} ya di hari ${tanggal} pada pukul ${notif['jam_awal']}!"',
-                                        style: TextStyle(fontSize: 15),
-                                        softWrap: true,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  '"Halo ${notif['nama']}!, jangan lupa untuk melakukan janji temu bersama Dokter ${notif['dokter']} ya di hari ${tanggal} pada pukul ${notif['jam_awal']}!"',
+                                  style: TextStyle(fontSize: 15),
+                                  softWrap: true,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -163,9 +155,8 @@ class Notifikasi extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF0D0A92),
                           ),
-                          
-                          height: 190,
                           width: 95,
+                          height: 190,
                           child: Icon(
                             Icons.calendar_today_outlined,
                             color: Colors.white,
@@ -175,22 +166,12 @@ class Notifikasi extends StatelessWidget {
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(left: 10, right: 10),
-                            child: ListView(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                            child: Column(
                               children: [
-                                Column(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          '"Halo ${notif['nama']}!, jangan lupa untuk melakukan janji temu bersama Dokter ${notif['dokter']} ya di hari ${tanggal} pada pukul ${notif['jam_awal']}!"',
-                                          style: TextStyle(fontSize: 15),
-                                          softWrap: true,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                Text(
+                                  '"Halo ${notif['nama']}!, jangan lupa untuk melakukan janji temu bersama Dokter ${notif['dokter']} ya di hari ${tanggal} pada pukul ${notif['jam_awal']}!"',
+                                  style: TextStyle(fontSize: 15),
+                                  softWrap: true,
                                 ),
                               ],
                             ),
@@ -236,8 +217,8 @@ class Notifikasi extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF0D0A92),
                           ),
-                          height: 190,
                           width: 95,
+                          height: 190,
                           child: Icon(
                             Icons.medication_liquid_rounded,
                             color: Colors.white,
@@ -247,22 +228,12 @@ class Notifikasi extends StatelessWidget {
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(left: 10, right: 10),
-                            child: ListView(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                            child: Column(
                               children: [
-                                Column(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          '"Halo ${notifobat['nama_pasien']}!, jangan lupa untuk mengonsumsi obat ${notifobat['nama']} ya di hari ini! Untuk info lengkap mengenai cara mengonsumsi obatnya terdapat di Info Obat!"',
-                                          style: TextStyle(fontSize: 15),
-                                          softWrap: true,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                Text(
+                                  '"Halo ${notifobat['nama_pasien']}!, jangan lupa untuk mengonsumsi obat ${notifobat['nama']} ya di hari ini! Untuk info lengkap mengenai cara mengonsumsi obatnya terdapat di Info Obat!"',
+                                  style: TextStyle(fontSize: 15),
+                                  softWrap: true,
                                 ),
                               ],
                             ),

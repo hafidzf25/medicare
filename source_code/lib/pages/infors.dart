@@ -102,7 +102,7 @@ class infoRS extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 0, left: 40, right: 40),
+            padding: EdgeInsets.only(top: 0, left: 40, right: 40, bottom: 20),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(

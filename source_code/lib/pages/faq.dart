@@ -107,25 +107,28 @@ class FAQ extends StatelessWidget {
             );
           },
           style: ButtonStyle(alignment: Alignment.centerLeft),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: Text(
-                  question,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold),
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Text(
+                    question,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-
-              Icon(
-                Icons.chevron_right,
-                color: Colors.black,
-              ),
-            ],
+            
+                Icon(
+                  Icons.chevron_right,
+                  color: Colors.black,
+                ),
+              ],
+            ),
           ),
         ),
       ),
