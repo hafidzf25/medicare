@@ -90,7 +90,6 @@ class _IsiHistoryState extends State<IsiHistory> {
             child: Row(
               children: [
                 Container(
-                  width: 130,
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(

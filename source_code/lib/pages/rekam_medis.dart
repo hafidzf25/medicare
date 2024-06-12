@@ -92,7 +92,6 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
             child: Row(
               children: [
                 Container(
-                  width: 130,
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
