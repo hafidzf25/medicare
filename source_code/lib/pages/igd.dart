@@ -6,7 +6,6 @@ class IGD extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       appBar: AppBar(

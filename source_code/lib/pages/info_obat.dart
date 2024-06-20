@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/main.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -17,7 +18,7 @@ class InfoObat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(1);
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       appBar: AppBar(
@@ -31,8 +32,16 @@ class InfoObat extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
+                    bottomNavIndex.value = 3;
                     // Kembali ke halaman sebelumnya
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return MyHomePage(bottomNavIndex: bottomNavIndex);
+                        },
+                      ),
+                    );
                   },
                   child: Image.asset(
                     'assets/icon/Cancel.png',

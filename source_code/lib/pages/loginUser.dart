@@ -19,7 +19,6 @@ class _LoginUserState extends State<LoginUser> {
 
   @override
   Widget build(BuildContext context) {
-    AuthCubit myAuth = context.read<AuthCubit>();
 
     return Scaffold(
       body: BlocListener<AuthCubit, AuthModel>(

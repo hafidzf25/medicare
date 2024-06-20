@@ -5,13 +5,11 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/main.dart';
-import 'package:source_code/pages/reservasi_tab.dart';
 import '../widgets/GreenButton.dart';
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-  var locale;
   
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,

@@ -49,7 +49,6 @@ class _Reservasi2State extends State<Reservasi2> {
 
   @override
   Widget build(BuildContext context) {
-    AuthCubit myAuth = context.read<AuthCubit>();
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),

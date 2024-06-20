@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,7 +7,6 @@ import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/landingPage.dart';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:html' as html;
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -20,25 +21,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _phoneNumber = '';
   bool _isAgreed = false;
   Uint8List? _galleryImageBytes;
-
-  void getImageFromGallery() {
-    final input = html.FileUploadInputElement();
-    input.accept = 'image/*';
-    input.click();
-
-    input.onChange.listen((event) {
-      final file = input.files!.first;
-      final reader = html.FileReader();
-
-      reader.onLoad.listen((event) {
-        setState(() {
-          _galleryImageBytes = reader.result as Uint8List?;
-        });
-      });
-
-      reader.readAsArrayBuffer(file);
-    });
-  }
 
   void _register() {
     if (_formKey.currentState!.validate()) {

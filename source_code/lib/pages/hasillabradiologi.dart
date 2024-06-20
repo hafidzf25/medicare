@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:source_code/cubits/auth.cubit.dart';
 import 'package:source_code/pages/isi_hasillab.dart';
 import 'package:source_code/pages/isi_hasilradiologi.dart';
 
@@ -16,7 +18,7 @@ class HasilLab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    AuthCubit myAuth = context.read<AuthCubit>();
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       appBar: AppBar(
@@ -70,7 +72,15 @@ class HasilLab extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 40, left: 40, right: 40, bottom: 20),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
+                myAuth.dataLabProfilLain = [];
+                await myAuth.getLabByIdDaftarProfil(
+                    myAuth.dataProfil['id_daftar_profil']);
+                for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+                  await myAuth.getLabByIdDaftarProfilLain(
+                      myAuth.dataProfilLain[i]['id_daftar_profil'],
+                      myAuth.dataProfilLain[i]['id']);
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Isi_HasilLab()),
@@ -114,7 +124,15 @@ class HasilLab extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 0, left: 40, right: 40),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
+                myAuth.dataRadiologiProfilLain = [];
+                await myAuth.getRadiologiByIdDaftarProfil(
+                    myAuth.dataProfil['id_daftar_profil']);
+                for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+                  await myAuth.getRadiologiByIdDaftarProfilLain(
+                      myAuth.dataProfilLain[i]['id_daftar_profil'],
+                      myAuth.dataProfilLain[i]['id']);
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Isi_HasilRadiologi()),

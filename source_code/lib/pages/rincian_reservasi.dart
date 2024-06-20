@@ -3,9 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:source_code/main.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
-import 'package:source_code/pages/landingPage.dart';
-import 'package:source_code/pages/reservasi.dart';
-import 'package:source_code/pages/reservasi_tab.dart';
+import 'package:source_code/pages/info_obat.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -173,7 +171,6 @@ class _RincianReservasiState extends State<RincianReservasi> {
               onPressed: () async {
                 AuthCubit myAuth = context.read<AuthCubit>();
                 var Reservasi = context.read<AuthCubit>().Reservasi;
-                print(Reservasi);
 
                 if (currentStep == 4) {
                   bottomNavIndex.value = 1;
@@ -195,11 +192,18 @@ class _RincianReservasiState extends State<RincianReservasi> {
                         myAuth.dataProfilLain[i]['id']);
                   }
 
+                  myAuth.dataNotifikasiProfilLain = [];
+                  await myAuth.getNotifikasiByDaftarProfil(
+                      myAuth.dataProfil['id_daftar_profil']);
+                  for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+                    await myAuth.getNotifikasiByDaftarProfilLain(
+                        myAuth.dataProfilLain[i]['id_daftar_profil'],
+                        myAuth.dataProfilLain[i]['id']);
+                  }
+
                   await Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return MyHomePage(
-                        bottomNavIndex: bottomNavIndex,
-                      );
+                      return InfoObat();
                     },
                   ));
                 } else {
@@ -878,7 +882,6 @@ class _RincianReservasiState extends State<RincianReservasi> {
                           widget.idDaftarProfil,
                           listDiagnosa[i],
                           myAuth.Reservasi['id']);
-                      print(i);
                     }
 
                     // Perform action after selecting diagnosis

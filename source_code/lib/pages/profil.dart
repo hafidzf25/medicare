@@ -153,7 +153,8 @@ class _ProfilState extends State<Profil> {
                 CustomButton(
                   text: 'Keluar',
                   iconData: Icons.logout,
-                  onPressed: () {
+                  onPressed: () async {
+                    await myAuth.logout();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LandingPage()),

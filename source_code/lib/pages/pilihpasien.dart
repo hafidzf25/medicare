@@ -17,7 +17,7 @@ class PilihPasien extends StatefulWidget {
       {super.key,
       this.tanggal = '',
       this.idxJadwal = 0,
-      this.biaya = "Rp. 30.000"});
+      this.biaya = "Rp. 50.000"});
   String tanggal;
   String biaya;
   int idxJadwal;
@@ -292,8 +292,6 @@ class _PilihPasienState extends State<PilihPasien> {
               padding: EdgeInsets.all(20),
               child: GreenButton(
                 onTap: () {
-                  print(nama);
-                  print(tanggal_lahir);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

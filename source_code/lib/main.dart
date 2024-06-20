@@ -69,13 +69,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    AuthCubit myAuth = context.read<AuthCubit>();
     return Scaffold(
       appBar: _bottomNavIndex.value == 0 ? _buildAppBar() : null,
       body: _pages[_bottomNavIndex.value],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _bottomNavIndex.value,
-        onTap: (index) => _bottomNavIndex.value = index,
+        onTap: (index) async {
+          if (index == 1) {
+            await myAuth.getReservasiByDaftarProfil(
+                myAuth.dataProfil['id_daftar_profil']);
+          } else if (index == 2) {
+            await myAuth.getNotifikasiByDaftarProfil(
+                myAuth.dataProfil['id_daftar_profil']);
+            myAuth.dataNotifikasiProfilLain = [];
+            for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+              await myAuth.getNotifikasiByDaftarProfilLain(
+                  myAuth.dataProfilLain[i]['id_daftar_profil'],
+                  myAuth.dataProfilLain[i]['id']);
+            }
+          }
+          _bottomNavIndex.value = index;
+        },
+        // onTap: (index) => _bottomNavIndex.value = index,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         selectedItemColor: const Color(0xFF00C607),

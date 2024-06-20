@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
 
 class EditProfil extends StatefulWidget {
@@ -13,7 +12,6 @@ class EditProfil extends StatefulWidget {
 }
 
 class _EditProfilState extends State<EditProfil> {
-  late ImagePicker _imagePicker;
   Uint8List? _imageFile;
   bool _isEditing = false;
 
@@ -29,7 +27,6 @@ class _EditProfilState extends State<EditProfil> {
   @override
   void initState() {
     super.initState();
-    _imagePicker = ImagePicker();
     myAuth = BlocProvider.of<AuthCubit>(context); // Initialize myAuth
     // Initialize text field controllers with existing data
     _nameController.text = "${myAuth.dataProfil['nama']}";
@@ -76,8 +73,6 @@ class _EditProfilState extends State<EditProfil> {
 
   @override
   Widget build(BuildContext context) {
-    AuthCubit myAuth = context.read<AuthCubit>();
-
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       appBar: AppBar(

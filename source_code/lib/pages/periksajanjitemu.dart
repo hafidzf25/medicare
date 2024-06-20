@@ -21,7 +21,8 @@ class PeriksaJanjiTemu extends StatefulWidget {
       this.biaya = "Rp.20.000",
       this.idxJadwal = 0,
       this.nama = '',
-      this.tanggal_lahir = '', this.idxDaftarProfil = 0});
+      this.tanggal_lahir = '',
+      this.idxDaftarProfil = 0});
   String tanggal;
   int idxJadwal;
   String biaya;
@@ -39,8 +40,6 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
   @override
   Widget build(BuildContext context) {
     AuthCubit myAuth = context.read<AuthCubit>();
-    print(myAuth.dataProfil);
-    print(myAuth.dataProfilLain);
     DateTime dateTime =
         DateTime.parse(context.read<AuthCubit>().dataProfil['tanggal_lahir']);
     DateFormat dateFormat = DateFormat('d MMMM yyyy', 'id_ID');
@@ -359,7 +358,16 @@ class _PeriksaJanjiTemuState extends State<PeriksaJanjiTemu> {
                           widget.idxJadwal,
                           widget.idxDaftarProfil,
                           widget.biaya);
-                      await myAuth.getReservasiByDaftarProfil(myAuth.dataProfil['id_daftar_profil']);
+                      await myAuth.getReservasiByDaftarProfil(
+                          myAuth.dataProfil['id_daftar_profil']);
+                      myAuth.dataNotifikasiProfilLain = [];
+                      await myAuth.getNotifikasiByDaftarProfil(
+                          myAuth.dataProfil['id_daftar_profil']);
+                      for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
+                        await myAuth.getNotifikasiByDaftarProfilLain(
+                            myAuth.dataProfilLain[i]['id_daftar_profil'],
+                            myAuth.dataProfilLain[i]['id']);
+                      }
                       await Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
+import 'package:source_code/main.dart';
 import 'package:source_code/pages/editProfil.dart';
-import 'package:source_code/pages/profil.dart';
 import 'package:source_code/pages/tambahprofil.dart';
 
 void main() {
@@ -22,6 +22,8 @@ class ProfilPasien extends StatefulWidget {
 }
 
 class _ProfilPasienState extends State<ProfilPasien> {
+  final ValueNotifier<int> bottomNavIndex = ValueNotifier<int>(1);
+
   @override
   Widget build(BuildContext context) {
     AuthCubit myAuth = context.read<AuthCubit>();
@@ -39,7 +41,16 @@ class _ProfilPasienState extends State<ProfilPasien> {
               IconButton(
                 onPressed: () {
                   // Kembali ke halaman Profil dan kirim data yang diperbarui
+                  bottomNavIndex.value = 3;
                   Navigator.pop(context, myAuth.dataProfil);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return MyHomePage(bottomNavIndex: bottomNavIndex);
+                      },
+                    ),
+                  );
                 },
                 icon: Icon(
                   Icons.arrow_back,
@@ -242,10 +253,12 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                                             myAuth.state
                                                                 .accessToken);
                                                     // Optionally remove the item from the list
-                                                    setState(() {
-                                                      myAuth.dataProfilLain
-                                                          .removeAt(index);
-                                                    });
+                                                    setState(
+                                                      () {
+                                                        myAuth.dataProfilLain
+                                                            .removeAt(index);
+                                                      },
+                                                    );
                                                     Navigator.of(context).pop();
                                                   } catch (e) {
                                                     print(
@@ -253,9 +266,12 @@ class _ProfilPasienState extends State<ProfilPasien> {
                                                     // Optionally show an error message
                                                     ScaffoldMessenger.of(
                                                             context)
-                                                        .showSnackBar(SnackBar(
-                                                            content: Text(
-                                                                'Error deleting profile.')));
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            'Error deleting profile.'),
+                                                      ),
+                                                    );
                                                   }
                                                 },
                                               ),

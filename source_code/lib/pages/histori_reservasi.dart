@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:source_code/cubits/auth.cubit.dart';
-import 'package:source_code/pages/reservasi.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -21,7 +20,6 @@ class HistoryReservasi extends StatelessWidget {
   Widget build(BuildContext context) {
     initializeDateFormatting('id_ID', null);
     AuthCubit myAuth = context.read<AuthCubit>();
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xFFC1F4FF),
       appBar: AppBar(
