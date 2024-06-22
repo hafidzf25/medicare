@@ -118,7 +118,9 @@ class _ProfilState extends State<Profil> {
                 CustomButton(
                   text: 'Rekam Medis',
                   iconData: Icons.medical_services,
-                  onPressed: () {
+                  onPressed: () async {
+                    await myAuth.getRekamMedisByDaftarProfil(
+                        myAuth.dataProfil['id_daftar_profil']);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => RekamMedis()),

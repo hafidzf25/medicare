@@ -311,7 +311,10 @@ class _IsiBodyState extends State<IsiBody> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
+                AuthCubit myAuth = context.read<AuthCubit>();
+                await myAuth.getReservasiDoneByDaftarProfil(
+                    myAuth.dataProfil['id_daftar_profil']);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HistoryReservasi()),

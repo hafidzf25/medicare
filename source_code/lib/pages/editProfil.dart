@@ -38,17 +38,6 @@ class _EditProfilState extends State<EditProfil> {
     _emailController.text = "${myAuth.dataProfil['email']}";
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
-      setState(() {
-        _imageFile = bytes;
-      });
-    }
-  }
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -81,7 +70,7 @@ class _EditProfilState extends State<EditProfil> {
         _isEditing = false;
       });
       // Kembali ke halaman profilPasien
-      Navigator.pop(context, profilData); 
+      Navigator.pop(context, profilData);
     }
   }
 
@@ -127,28 +116,6 @@ class _EditProfilState extends State<EditProfil> {
           key: _formKey,
           child: Column(
             children: [
-              SizedBox(height: 20),
-              Align(
-                alignment: Alignment.topCenter,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _imageFile != null
-                      ? MemoryImage(_imageFile!) as ImageProvider<Object>
-                      : AssetImage(
-                          'assets/images/${myAuth.dataProfil['foto']}'),
-                ),
-              ),
-              SizedBox(height: 10),
-              TextButton(
-                onPressed: _pickImage,
-                child: Text(
-                  "Edit Foto",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
               SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.all(20),

@@ -741,18 +741,17 @@ class AuthCubit extends Cubit<AuthModel> {
       List<dynamic> body = jsonDecode(response.body);
       List<Map<String, dynamic>> hasil =
           body.map((dynamic item) => item as Map<String, dynamic>).toList();
-      dataRekamMedis = hasil;
-      for (var i = 0; i < dataRekamMedis.length; i++) {
+      for (var i = 0; i < hasil.length; i++) {
         var temp = await getJamKerjaDokterById(
-            dataRekamMedis[i]['id_jam_kerja_dokter']);
-        dataRekamMedis[i]['dokter'] = temp['dokter'];
+            hasil[i]['id_jam_kerja_dokter']);
+        hasil[i]['dokter'] = temp['dokter'];
         var tempPenyakit =
-            await getDaftarProfilPenyakitByReservasi(dataRekamMedis[i]['id']);
+            await getDaftarProfilPenyakitByReservasi(hasil[i]['id']);
 
         var nama = await getProfilLainById(idx);
-        dataRekamMedis[i]['nama'] = nama['nama'];
-        dataRekamMedis[i]['tanggal_lahir'] = nama['tanggal_lahir'];
-        dataRekamMedis[i]['foto'] = nama['foto'];
+        hasil[i]['nama'] = nama['nama'];
+        hasil[i]['tanggal_lahir'] = nama['tanggal_lahir'];
+        hasil[i]['foto'] = nama['foto'];
 
         // Mengambil semua nilai `id_penyakit` dari setiap elemen dalam data
         List<String> daftarPenyakit =
@@ -760,7 +759,7 @@ class AuthCubit extends Cubit<AuthModel> {
 
         // Menggabungkan nilai-nilai tersebut menjadi satu string yang dipisahkan oleh koma
         String printPenyakit = daftarPenyakit.join(', ');
-        dataRekamMedis[i]['penyakit'] = printPenyakit;
+        hasil[i]['penyakit'] = printPenyakit;
 
         List<Map<String, dynamic>> daftarObat = [];
 
@@ -770,8 +769,6 @@ class AuthCubit extends Cubit<AuthModel> {
           daftarObat = [...daftarObat, ...tempDataObat];
         }
 
-        print(daftarObat);
-
         // Mengambil nilai 'penyakit' dari setiap elemen dalam list yang digabungkan
         List<String> obatString =
             daftarObat.map((item) => item['nama'] as String).toList();
@@ -779,8 +776,9 @@ class AuthCubit extends Cubit<AuthModel> {
         obatString = obatString.toSet().toList();
 
         String hasilobat = obatString.join(', ');
-        dataRekamMedis[i]['obat'] = hasilobat;
+        hasil[i]['obat'] = hasilobat;
       }
+      dataRekamMedis.addAll(hasil);
     } else {
       throw Exception('Failed to load rekam medis');
     }

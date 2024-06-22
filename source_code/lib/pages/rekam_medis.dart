@@ -155,6 +155,7 @@ class _IsiRekamMedisState extends State<IsiRekamMedis> {
                     ),
                     child: TextButton(
                       onPressed: () async {
+                        print(myAuth.dataProfilLain);
                         // Fungsi yang akan dijalankan saat tombol ditekan
                         myAuth.dataRekamMedis = [];
                         for (var i = 0; i < myAuth.dataProfilLain.length; i++) {
